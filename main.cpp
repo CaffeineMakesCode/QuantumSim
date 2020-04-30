@@ -4,9 +4,7 @@
 #include "QubitLayer.h"
 
 int main(){
-    qubitLayer qubits[numStates*2];
-    qubits[0] = {1,0};
-    QubitLayer q{qubits};
+    QubitLayer q;
     for (int i = 0; i < numQubits; i++)
         q.hadamard(i);
     for (int i = 0; i < numQubits; i++)
@@ -23,5 +21,5 @@ int main(){
         q.pauliX(i);
     for (int i = 0; i < numQubits; i++)
         q.hadamard(i);
-    q.printQubits();
+    //q.printQubits();
 }

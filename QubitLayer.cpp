@@ -4,6 +4,7 @@
 
 QubitLayer::QubitLayer(qubitLayer *qL){
     qL_ = new qubitLayer[numStates*2];
+    qL_[0] = {1,0};
     if (!(qL == nullptr)){
         for (int row=0; row<(numStates*2); row++)
             qL_[row] = qL[row];
@@ -29,7 +30,6 @@ void QubitLayer::pauliX(int target){
     }
     updateLayer();
 }
-
 
 void QubitLayer::pauliY(int target){
     for (int i = 0; i < numStates; i++){
@@ -61,7 +61,6 @@ void QubitLayer::pauliZ(int target){
     }
     updateLayer();
 }
-
 
 void QubitLayer::hadamard(int target){
     for (int i = 0; i < numStates; i++){
