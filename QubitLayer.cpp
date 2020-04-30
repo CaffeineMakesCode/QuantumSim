@@ -62,6 +62,58 @@ void QubitLayer::pauliZ(int target){
     updateLayer();
 }
 
+
+void QubitLayer::hadamard(int target){
+    for (int i = 0; i < numStates; i++){
+        if (abs(qL_[2*i]) > 0){
+            std::bitset<numQubits> oldStateVec = i;
+            //change to |-> if bit is 1 (i.e. set)
+            if (oldStateVec.test(target)){
+                qL_[2*i+1] += -hadamardCoef*qL_[2*i];
+                oldStateVec.flip(target);
+                qL_[2*oldStateVec.to_ulong()+1] += hadamardCoef*qL_[2*i];
+            }
+            //change to |+> if bit is 0 (i.e. not set)
+            else{
+                qL_[2*oldStateVec.to_ulong()+1] += hadamardCoef*qL_[2*i];
+                oldStateVec.flip(target);
+                qL_[2*oldStateVec.to_ulong()+1] += hadamardCoef*qL_[2*i];
+            }
+        }
+    }
+    updateLayer();
+}
+
+void QubitLayer::cnot(int control, int target){
+    for (int i = 0; i < numStates; i++){
+        if (abs(qL_[2*i]) > 0){
+            std::bitset<numQubits> oldStateVec = i;
+            //flip target qubit if control bit is 1 (i.e. set)
+            if (oldStateVec.test(control)){
+                oldStateVec.flip(target);
+                qL_[2*oldStateVec.to_ulong()+1] = qL_[2*i];
+            }
+            else
+                qL_[2*i+1] = qL_[2*i];
+        }
+    }
+    updateLayer();
+}
+
+void QubitLayer::cphase(int control, int target){
+    for (int i = 0; i < numStates; i++){
+        if (abs(qL_[2*i]) > 0){
+            std::bitset<numQubits> oldStateVec = i;
+            //add phase to target qubit if control bit is 1 (i.e. set)
+            if (oldStateVec.test(control) && oldStateVec.test(target))
+                qL_[2*i+1] = -qL_[2*i];
+            else
+                qL_[2*i+1] = qL_[2*i];
+        }
+    }
+    updateLayer();
+}
+
 void QubitLayer::printQubits(){
     std::cout<<"State "<<"old "<<"new \n";
     for (int i = 0; i < numStates; i++){
