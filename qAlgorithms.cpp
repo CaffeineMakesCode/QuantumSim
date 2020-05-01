@@ -10,7 +10,6 @@ QubitLayer grover(int dSolution){
         exit(EXIT_FAILURE);
     }
     std::bitset<numQubits> bSolution = dSolution;
-    std::cout<<bSolution<<std::endl;
     QubitLayer q;
     int ctrlQubits[numQubits-1];
     for (int i = 0; i < (numQubits-1); i++)
