@@ -50,7 +50,7 @@ $(TARGET).o: $(TARGET).cpp $(TARGET_DEPS) $(QLAYER_DEPS)
 	@$(CXX) $(CXXFLAGS) -c $(TARGET).cpp
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 
-$(QUBITLAYER).o: $(QUBITLAYER).cpp $(QLAYER_DEPS)
+$(QUBITLAYER).o: $(QUBITLAYER).cpp $(TARGET_DEPS) $(QLAYER_DEPS)
 	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)        "
 	@$(CXX) $(CXXFLAGS) -c $(QUBITLAYER).cpp
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
