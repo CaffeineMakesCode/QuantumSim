@@ -13,9 +13,11 @@ TARGET = main
 # the dependencies
 TARGET_DEPS  = definitions.h
 QLAYER_DEPS = QubitLayer.h
+EXAMPLES_DEPS = qAlgorithms.h
 
 # the other source files
 QUBITLAYER = QubitLayer
+EXAMPLES = qAlgorithms
 
 # debug directory
 DEBUG = main.dSYM
@@ -37,9 +39,9 @@ OK_STRING	   = "[OK]"
 
 all: $(TARGET)
 
-$(TARGET): $(TARGET).o $(QUBITLAYER).o
+$(TARGET): $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o
 	@printf "%b" "$(CYAN)$(LINK_STRING) $(NO_COLOR)$(TARGET).o $(QUBITLAYER).o   "
-	@$(CXX) $(CXXFLAGS) -o $(TARGET) $(TARGET).o $(QUBITLAYER).o
+	@$(CXX) $(CXXFLAGS) -o $(TARGET) $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 	@if [ -a $(TARGET) ] ; \
 	then printf "%b" "$(GREEN)$(SUCCESS_STRING)\n"; \
@@ -55,8 +57,13 @@ $(QUBITLAYER).o: $(QUBITLAYER).cpp $(TARGET_DEPS) $(QLAYER_DEPS)
 	@$(CXX) $(CXXFLAGS) -c $(QUBITLAYER).cpp
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 
+$(EXAMPLES).o: $(EXAMPLES).cpp $(TARGET_DEPS) $(QLAYER_DEPS) $(EXAMPLES_DEPS)
+	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)       "
+	@$(CXX) $(CXXFLAGS) -c $(EXAMPLES).cpp
+	@printf "%b" "$(GREEN)$(OK_STRING)\n"
+
 clean:
 	@printf "%b" "$(MAGENTA)Removing $(NO_COLOR)executable, object files and debug files "
-	@$(RM) $(TARGET) $(TARGET).o $(QUBITLAYER).o
+	@$(RM) $(TARGET) $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o
 	@$(RM) -rf $(DEBUG)
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
