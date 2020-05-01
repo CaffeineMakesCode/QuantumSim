@@ -10,8 +10,9 @@ class QubitLayer{
         void pauliY(int target);
         void pauliZ(int target);
         void hadamard(int target);
-        void cnot(int control, int target);
-        void cphase(int control, int target);
+        bool checkControls(int *controls, int numControls, std::bitset<numQubits> state);
+        void cnot(int *controls, int numControls, int target);
+        void cphase(int *controls, int numControls, int target);
         void updateLayer();
         void printQubits();
     private:

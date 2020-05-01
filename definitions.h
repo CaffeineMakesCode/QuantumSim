@@ -2,7 +2,7 @@
 #define DEFINITIONS_H
 #include <complex>
 
-constexpr int numQubits{2};
+constexpr int numQubits{3};
 constexpr std::complex<double> hadamardCoef{0.707106781186548,0};
 constexpr std::complex<double> complexImg{0,1};
 constexpr int power2(int qubits){

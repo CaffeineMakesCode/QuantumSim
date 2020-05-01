@@ -5,21 +5,22 @@
 
 int main(){
     QubitLayer q;
+    int ctrlQubits[numQubits-1]{0,1};
     for (int i = 0; i < numQubits; i++)
         q.hadamard(i);
     for (int i = 0; i < numQubits; i++)
         q.pauliX(i);
-    q.cphase(0, 1);
+    q.cphase(ctrlQubits, 2, 2);
     for (int i = 0; i < numQubits; i++)
         q.pauliX(i);
     for (int i = 0; i < numQubits; i++)
         q.hadamard(i);
     for (int i = 0; i < numQubits; i++)
         q.pauliX(i);
-    q.cphase(0, 1);
+    q.cphase(ctrlQubits, 2, 2);
     for (int i = 0; i < numQubits; i++)
         q.pauliX(i);
     for (int i = 0; i < numQubits; i++)
         q.hadamard(i);
-    //q.printQubits();
+    q.printQubits();
 }
