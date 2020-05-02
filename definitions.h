@@ -3,6 +3,7 @@
 #include <complex>
 
 static constexpr int numQubits{4};
+static constexpr double pi{3.14159265358979323846};
 constexpr std::complex<double> hadamardCoef{0.707106781186548,0};
 constexpr std::complex<double> complexImg{0,1};
 static constexpr int power2(int qubits){
