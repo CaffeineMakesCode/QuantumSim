@@ -120,6 +120,23 @@ void QubitLayer::cphase(int *controls, int numControls, int target){
     updateLayer();
 }
 
+qProb QubitLayer::getMaxAmplitude(){
+    std::bitset<numQubits> state;
+    qProb result;
+    float currentProb{0};
+    float previousProb{0};
+    for (int i = 0; i < numStates; i++){
+        state = i;
+        currentProb = abs(qL_[2*i]);
+        if (currentProb > previousProb){
+            result.state = state;
+            result.prob = currentProb;
+        }
+        previousProb = currentProb;
+    }
+    return result;
+}
+
 void QubitLayer::printQubits(){
     std::cout<<"State "<<"old "<<"new \n";
     for (int i = 0; i < numStates; i++){

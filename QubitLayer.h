@@ -2,6 +2,11 @@
 #define QUBITLAYER_H
 #include "definitions.h"
 
+struct qProb{
+    std::bitset<numQubits> state;
+    double prob;
+};
+
 class QubitLayer{
     public:
         QubitLayer(qubitLayer *qL = nullptr);
@@ -13,6 +18,7 @@ class QubitLayer{
         bool checkControls(int *controls, int numControls, std::bitset<numQubits> state);
         void cnot(int *controls, int numControls, int target);
         void cphase(int *controls, int numControls, int target);
+        qProb getMaxAmplitude();
         void updateLayer();
         void printQubits();
     private:
