@@ -4,7 +4,7 @@
 
 struct qProb{
     std::bitset<numQubits> state;
-    double prob;
+    precision prob;
 };
 
 class QubitLayer{
