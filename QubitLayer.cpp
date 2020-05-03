@@ -24,25 +24,29 @@ void QubitLayer::updateLayer(){
 
 void QubitLayer::pauliX(int target){
     for (int i = 0; i < numStates; i++){
-        std::bitset<numQubits> state = i;
-        state.flip(target);
-        qL_[2*state.to_ulong()+1] = qL_[2*i];
+        if (abs(qL_[2*i]) > 0){
+            std::bitset<numQubits> state = i;
+            state.flip(target);
+            qL_[2*state.to_ulong()+1] = qL_[2*i];
+        }
     }
     updateLayer();
 }
 
 void QubitLayer::pauliY(int target){
     for (int i = 0; i < numStates; i++){
-        std::bitset<numQubits> state = i;
-        //add phase of i if bit is 0 (i.e. set)
-        if (!state.test(target)){
-            state.flip(target);
-            qL_[2*state.to_ulong()+1] = complexImg*qL_[2*i];
-        }
-        //add phase of -i if bit is 1 (i.e. set)
-        else{
-            state.flip(target);
-            qL_[2*state.to_ulong()+1] = -complexImg*qL_[2*i];
+        if (abs(qL_[2*i]) > 0){
+            std::bitset<numQubits> state = i;
+            //add phase of i if bit is 0 (i.e. set)
+            if (!state.test(target)){
+                state.flip(target);
+                qL_[2*state.to_ulong()+1] = complexImg*qL_[2*i];
+            }
+            //add phase of -i if bit is 1 (i.e. set)
+            else{
+                state.flip(target);
+                qL_[2*state.to_ulong()+1] = -complexImg*qL_[2*i];
+            }
         }
     }
     updateLayer();
