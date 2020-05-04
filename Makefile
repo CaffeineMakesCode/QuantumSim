@@ -32,15 +32,15 @@ MAGENTA  = \033[35;35m
 NO_COLOR = \033[m
 
 # info strings
-SUCCESS_STRING = "[BUILD\ SUCCESS]"
+SUCCESS_STRING = "Compiled\ successfully!"
 COM_STRING	   = "Compiling"
 LINK_STRING	   = "Linking"
-OK_STRING	   = "[OK]"
+OK_STRING	   = "OK"
 
 all: $(TARGET)
 
 $(TARGET): $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o
-	@printf "%b" "$(CYAN)$(LINK_STRING) $(NO_COLOR)$(TARGET).o $(QUBITLAYER).o   "
+	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o  "
 	@$(CXX) $(CXXFLAGS) -o $(TARGET) $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 	@if [ -a $(TARGET) ] ; \
@@ -48,17 +48,17 @@ $(TARGET): $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o
 	fi;
 
 $(TARGET).o: $(TARGET).cpp $(TARGET_DEPS) $(QLAYER_DEPS)
-	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)              "
+	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                             "
 	@$(CXX) $(CXXFLAGS) -c $(TARGET).cpp
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 
 $(QUBITLAYER).o: $(QUBITLAYER).cpp $(TARGET_DEPS) $(QLAYER_DEPS)
-	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)        "
+	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                       "
 	@$(CXX) $(CXXFLAGS) -c $(QUBITLAYER).cpp
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 
 $(EXAMPLES).o: $(EXAMPLES).cpp $(TARGET_DEPS) $(QLAYER_DEPS) $(EXAMPLES_DEPS)
-	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)       "
+	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                      "
 	@$(CXX) $(CXXFLAGS) -c $(EXAMPLES).cpp
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 
