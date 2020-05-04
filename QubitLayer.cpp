@@ -141,13 +141,19 @@ qProb QubitLayer::getMaxAmplitude(){
     return result;
 }
 
+void QubitLayer::printMeasurement(){
+    qProb q = getMaxAmplitude();
+    std::cout<<"Measurement outcome:        |"<<q.state<<">"<<std::endl;
+    std::cout<<"Probability of outcome:     "<<q.prob<<std::endl;
+}
+
 void QubitLayer::printQubits(){
-    std::cout<<"State "<<"old "<<"new \n";
+    std::cout<<"Amplitude, "<<"State \n";
     for (int i = 0; i < numStates; i++){
         std::bitset<numQubits> binaryRep = i;
         std::string state = binaryRep.to_string();
         //reverse(state.begin(), state.end());
-        std::cout<<"|"<<state<<"> "; 
-        std::cout<<qL_[i*2]<<" "<<qL_[i*2+1]<<"\n";
+        std::cout<<qL_[i*2]<<", ";
+        std::cout<<"|"<<state<<">\n"; 
     }
 }

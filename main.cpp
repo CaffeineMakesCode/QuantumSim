@@ -5,8 +5,6 @@
 
 int main(){
     QubitLayer q = grover(10);
-    qProb r = q.getMaxAmplitude();
-    std::cout<<r.prob<<std::endl;
-    std::cout<<r.state<<std::endl;
-    //q.printQubits();
+    q.printMeasurement();
+    q.printQubits();
 }

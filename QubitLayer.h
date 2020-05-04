@@ -20,6 +20,7 @@ class QubitLayer{
         void cphase(int *controls, int numControls, int target);
         qProb getMaxAmplitude();
         void updateLayer();
+        void printMeasurement();
         void printQubits();
     private:
         qubitLayer *qL_;
