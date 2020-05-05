@@ -9,7 +9,7 @@ QubitLayer grover(int dSolution, int numReps){
         std::cout<<"Your solution:    "<<dSolution<<std::endl;
         exit(EXIT_FAILURE);
     }
-    if (numReps == 1)
+    if (numReps == 0)
         numReps = static_cast<int>(std::sqrt(numStates)/4*pi);
     std::bitset<numQubits> bSolution = dSolution;
     QubitLayer q;

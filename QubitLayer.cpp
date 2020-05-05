@@ -152,7 +152,6 @@ void QubitLayer::printQubits(){
     for (int i = 0; i < numStates; i++){
         std::bitset<numQubits> binaryRep = i;
         std::string state = binaryRep.to_string();
-        //reverse(state.begin(), state.end());
         std::cout<<qL_[i*2]<<", ";
         std::cout<<"|"<<state<<">\n"; 
     }
