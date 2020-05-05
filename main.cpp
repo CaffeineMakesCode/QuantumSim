@@ -8,4 +8,5 @@ int main(){
     QubitLayer q = grover(3);
     std::chrono::duration<double> dur= std::chrono::system_clock::now() - start;
     std::cout << "Time for program " << dur.count() << " seconds" << std::endl;
+    q.printMeasurement();
 }
