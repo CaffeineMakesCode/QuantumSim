@@ -3,7 +3,7 @@
 #include <complex>
 
 typedef double precision;
-static constexpr int numQubits{4};
+static constexpr int numQubits{3};
 static constexpr precision pi{3.14159265358979323846};
 constexpr std::complex<precision> hadamardCoef{0.707106781186548,0};
 constexpr std::complex<precision> complexImg{0,1};

@@ -41,3 +41,32 @@ QubitLayer grover(int dSolution, int numReps){
     }
     return q;
 }
+
+QubitLayer repCode3(int errorLocation, pauliError errorType){
+    if (numQubits != 3){
+        std::cout<<"\033[31;31m[Error]\033[m"<<std::endl;
+        std::cout<<"Number of qubits defined:                            "<<numQubits<<std::endl;
+        std::cout<<"Number of qubits used by 3 qubit repetition code:    "<<3<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+    QubitLayer q;
+    //initialise state to anything you want
+    q.rx(0, pi/3);
+    std::cout<<"Initial state:"<<std::endl;
+    q.printQubits();
+    //"copy" state
+    q.cnot(0, 1);
+    q.cnot(0, 2);
+    //inject error
+    switch(errorType){
+        case errorX: q.pauliX(errorLocation); break;
+        case errorY: q.pauliY(errorLocation); break;
+        case errorZ: q.pauliZ(errorLocation); break;
+    }
+    //undo the "copy"
+    q.cnot(0, 1);
+    q.cnot(0, 2);
+    q.toffoli(2, 1, 0);
+    std::cout<<"Final state:"<<std::endl;
+    return q;
+}

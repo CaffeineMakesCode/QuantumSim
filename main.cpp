@@ -5,8 +5,9 @@
 
 int main(){
     auto start = std::chrono::system_clock::now();
-    QubitLayer q = grover(3);
+    pauliError error = errorX;
+    QubitLayer q = repCode3(0, error);
     std::chrono::duration<double> dur= std::chrono::system_clock::now() - start;
     std::cout << "Time for program " << dur.count() << " seconds" << std::endl;
-    q.printMeasurement();
+    q.printQubits();
 }
