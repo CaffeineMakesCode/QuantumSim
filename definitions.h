@@ -3,17 +3,17 @@
 #include <complex>
 
 typedef double precision;
-static constexpr int numQubits{3};
-static constexpr precision pi{3.14159265358979323846};
+constexpr int numQubits{10};
+constexpr precision pi{3.14159265358979323846};
 constexpr std::complex<precision> hadamardCoef{0.707106781186548,0};
 constexpr std::complex<precision> complexImg{0,1};
-static constexpr int power2(int qubits){
+constexpr int power2(int qubits){
     int result{1};
     for (int i = 0; i < qubits; i++)
         result *= 2;
     return result;
 }
-static constexpr int numStates{power2(numQubits)};
+constexpr int numStates{power2(numQubits)};
 typedef std::complex<precision> qubitLayer;
 
 #endif
