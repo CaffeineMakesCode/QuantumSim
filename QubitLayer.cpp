@@ -1,7 +1,7 @@
 #include <complex>
 #include <iostream>
 #include <cmath>
-#include "QubitLayer.h"
+#include "QubitLayer.hpp"
 
 QubitLayer::QubitLayer(qubitLayer *qL){
     qL_ = new qubitLayer[numStates*2];

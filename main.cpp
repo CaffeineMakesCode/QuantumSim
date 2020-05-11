@@ -1,7 +1,7 @@
 #include <iostream>
 #include <complex>
-#include "QubitLayer.h"
-#include "qAlgorithms.h"
+#include "QubitLayer.hpp"
+#include "qAlgorithms.hpp"
 
 int main(){
     auto start = std::chrono::system_clock::now();

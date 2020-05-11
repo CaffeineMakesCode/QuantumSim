@@ -1,6 +1,6 @@
 #ifndef QUBITLAYER_H
 #define QUBITLAYER_H
-#include "definitions.h"
+#include "definitions.hpp"
 
 struct qProb{
     std::bitset<numQubits> state;

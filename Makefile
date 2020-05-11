@@ -11,9 +11,9 @@ CXXFLAGS = -g -Wall $(STANDARD)
 TARGET = main
 
 # the dependencies
-TARGET_DEPS  = definitions.h
-QLAYER_DEPS = QubitLayer.h
-EXAMPLES_DEPS = qAlgorithms.h
+TARGET_DEPS  = definitions.hpp
+QLAYER_DEPS = QubitLayer.hpp
+EXAMPLES_DEPS = qAlgorithms.hpp
 
 # the other source files
 QUBITLAYER = QubitLayer

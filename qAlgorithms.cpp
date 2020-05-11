@@ -1,5 +1,5 @@
 #include <iostream>
-#include "qAlgorithms.h"
+#include "qAlgorithms.hpp"
 
 QubitLayer grover(int dSolution, int numReps){
     if (dSolution > numStates){
