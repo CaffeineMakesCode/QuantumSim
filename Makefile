@@ -22,6 +22,12 @@ EXAMPLES = qAlgorithms
 # debug directory
 DEBUG = main.dSYM
 
+# number of qubits
+NUMQUBITS = 2
+
+# flag to set number of qubits
+DFLAG = -DnumQubits
+
 # colours
 BLUE     = \033[34;34m
 CYAN     = \033[36;36m
@@ -49,17 +55,17 @@ $(TARGET): $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o
 
 $(TARGET).o: $(TARGET).cpp $(TARGET_DEPS) $(QLAYER_DEPS)
 	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                             "
-	@$(CXX) $(CXXFLAGS) -c $(TARGET).cpp
+	@$(CXX) $(DFLAG)=$(NUMQUBITS) $(CXXFLAGS) -c $(TARGET).cpp
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 
 $(QUBITLAYER).o: $(QUBITLAYER).cpp $(TARGET_DEPS) $(QLAYER_DEPS)
 	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                       "
-	@$(CXX) $(CXXFLAGS) -c $(QUBITLAYER).cpp
+	@$(CXX) $(DFLAG)=$(NUMQUBITS) $(CXXFLAGS) -c $(QUBITLAYER).cpp
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 
 $(EXAMPLES).o: $(EXAMPLES).cpp $(TARGET_DEPS) $(QLAYER_DEPS) $(EXAMPLES_DEPS)
 	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                      "
-	@$(CXX) $(CXXFLAGS) -c $(EXAMPLES).cpp
+	@$(CXX) $(DFLAG)=$(NUMQUBITS) $(CXXFLAGS) -c $(EXAMPLES).cpp
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 
 clean:
