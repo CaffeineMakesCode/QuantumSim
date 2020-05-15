@@ -4,7 +4,6 @@
 QubitLayer grover(int dSolution, int numReps){
     if (dSolution > numStates){
         std::cout<<"\033[31;31m[Error]\033[m"<<std::endl;
-        std::cout<<"Ravi says that your solution is not in the problem domain."<<std::endl;
         std::cout<<"Number of states: "<<numStates<<std::endl;
         std::cout<<"Your solution:    "<<dSolution<<std::endl;
         exit(EXIT_FAILURE);
