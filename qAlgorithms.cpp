@@ -23,7 +23,7 @@ QubitLayer grover(int dSolution, int numReps){
         for (int i = 0; i < numQubits; i++)
             if (!bSolution.test(i))
                 q.pauliX(i);
-        q.cphase(ctrlQubits, numQubits-1, numQubits-1);
+        q.mcphase(ctrlQubits, numQubits-1, numQubits-1);
         for (int i = 0; i < numQubits; i++)
             if (!bSolution.test(i))
                 q.pauliX(i);
@@ -32,7 +32,7 @@ QubitLayer grover(int dSolution, int numReps){
             q.hadamard(i);
         for (int i = 0; i < numQubits; i++)
             q.pauliX(i);
-        q.cphase(ctrlQubits, numQubits-1, numQubits-1);
+        q.mcphase(ctrlQubits, numQubits-1, numQubits-1);
         for (int i = 0; i < numQubits; i++)
             q.pauliX(i);
         for (int i = 0; i < numQubits; i++)

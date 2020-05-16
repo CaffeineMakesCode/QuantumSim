@@ -206,7 +206,21 @@ void QubitLayer::mcnot(int *controls, int numControls, int target){
     updateLayer();
 }
 
-void QubitLayer::cphase(int *controls, int numControls, int target){
+void QubitLayer::cphase(int control, int target){
+    for (int i = 0; i < numStates; i++){
+        if (abs(qL_[2*i]) > 0){
+            std::bitset<numQubits> state = i;
+            //add phase to target qubit if control bit(s) is 1 (i.e. set)
+            if (state.test(control) && state.test(target))
+                qL_[2*i+1] = -qL_[2*i];
+            else
+                qL_[2*i+1] = qL_[2*i];
+        }
+    }
+    updateLayer();
+}
+
+void QubitLayer::mcphase(int *controls, int numControls, int target){
     for (int i = 0; i < numStates; i++){
         if (abs(qL_[2*i]) > 0){
             std::bitset<numQubits> state = i;
