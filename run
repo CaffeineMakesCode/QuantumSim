@@ -1,0 +1,26 @@
+#!/bin/zsh
+
+function runBenchmarks(){
+    make singleQBenchmark NUMQUBITS=1
+    make cleanObj
+    make twoQBenchmark NUMQUBITS=2
+    make cleanObj
+    make threeQBenchmark NUMQUBITS=3
+    make cleanObj
+    ./singleQGateTimes
+    ./twoQGateTimes
+    ./threeQGateTimes
+    make clean
+}
+
+function runMain(){
+    make
+    ./main
+    make clean
+}
+
+if [ "$1" = "benchmarks" ]; then
+        runBenchmarks
+    else
+        runMain
+fi
