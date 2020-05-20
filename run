@@ -10,7 +10,7 @@ function runBenchmarks(){
     ./singleQGateTimes
     ./twoQGateTimes
     ./threeQGateTimes
-    make clean
+    #make clean
 }
 
 function runMain(){
