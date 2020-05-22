@@ -14,13 +14,13 @@ function runBenchmarks(){
 }
 
 function runMain(){
-    make
+    make NUMQUBITS=$1
     ./main
-    make clean
+    make cleanObj
 }
 
 if [ "$1" = "benchmarks" ]; then
         runBenchmarks
     else
-        runMain
+        runMain $1
 fi
