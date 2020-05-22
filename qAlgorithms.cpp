@@ -69,3 +69,18 @@ QubitLayer repCode3(int errorLocation, pauliError errorType){
     std::cout<<"Final state:"<<std::endl;
     return q;
 }
+
+QubitLayer genEPR(int q1, int q2){
+    if (numQubits < 2){
+        std::cout<<"\033[31;31m[Error]\033[m"<<std::endl;
+        std::cout<<"Number of qubits defined:           "<<numQubits<<std::endl;
+        std::cout<<"Minimum number of qubits needed:    "<<2<<std::endl;
+        exit(EXIT_FAILURE);
+    }
+    QubitLayer q;
+    //apply hadamard to the first qubit
+    q.hadamard(q2);
+    //apply cnot on the 2 qubits
+    q.cnot(q2, q1);
+    return q;
+}

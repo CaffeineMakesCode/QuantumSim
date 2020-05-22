@@ -21,5 +21,13 @@ QubitLayer grover(int dSolution, int numReps = 0);
  * @return QubitLayer object containing the amplitudes of all the state
  */
 QubitLayer repCode3(int errorLocation, pauliError errorType);
+/**
+ * Generates an EPR pair between 2 qubits.
+ * 
+ * @param q1   first qubit in pair
+ * @param q2   second qubit in pair
+ * @return QubitLayer object containing the amplitudes of all the state
+ */
+QubitLayer genEPR(int q1, int q2);
 
 #endif
