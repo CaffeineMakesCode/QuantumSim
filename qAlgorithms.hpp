@@ -16,8 +16,6 @@ QubitLayer grover(int dSolution, int numReps = 0);
 /**
  * 3 qubit repetition code.
  * 
- * @param a0              amplitude of |0>
- * @param a1              amplitude of |1>
  * @param errorLocation   qubit where error occured
  * @param errorType       type of error
  * @return QubitLayer object containing the amplitudes of all the state
