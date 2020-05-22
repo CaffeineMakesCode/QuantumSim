@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-function runBenchmarks(){
+function runGateBenchmarks(){
     make singleQBenchmark NUMQUBITS=1
     make cleanObj
     make twoQBenchmark NUMQUBITS=2
@@ -10,7 +10,12 @@ function runBenchmarks(){
     ./singleQGateTimes
     ./twoQGateTimes
     ./threeQGateTimes
-    #make clean
+}
+
+function runEprBenchmark(){
+    make eprBenchmark NUMQUBITS=$1
+    ./epr
+    make cleanObj
 }
 
 function runMain(){
@@ -19,8 +24,10 @@ function runMain(){
     make cleanObj
 }
 
-if [ "$1" = "benchmarks" ]; then
-        runBenchmarks
-    else
-        runMain $1
+if [ "$1" = "gateBenchmarks" ]; then
+        runGateBenchmarks
+elif [ "$1" = "eprBenchmark" ]; then
+    runEprBenchmark $2
+else
+    runMain $1
 fi

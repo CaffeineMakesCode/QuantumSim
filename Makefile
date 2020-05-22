@@ -26,12 +26,13 @@ EXAMPLES = qAlgorithms
 SINGLEQGATETIMES = singleQGateTimes
 TWOQGATETIMES = twoQGateTimes
 THREEQGATETIMES = threeQGateTimes
+EPR = epr
 
 # list of object files
-objectFiles = $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o $(SINGLEQGATETIMES).o $(TWOQGATETIMES).o $(THREEQGATETIMES).o
+objectFiles = $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o $(SINGLEQGATETIMES).o $(TWOQGATETIMES).o $(THREEQGATETIMES).o $(EPR).o
 
 #list of executables
-executables = $(TARGET) $(SINGLEQGATETIMES) $(TWOQGATETIMES) $(THREEQGATETIMES) 
+executables = $(TARGET) $(SINGLEQGATETIMES) $(TWOQGATETIMES) $(THREEQGATETIMES) $(EPR)
 
 # debug directory
 DEBUG = main.dSYM
@@ -87,7 +88,7 @@ twoQBenchmark: $(TWOQGATETIMES)
 threeQBenchmark: $(THREEQGATETIMES)
 
 $(SINGLEQGATETIMES): $(SINGLEQGATETIMES).o $(QUBITLAYER).o
-	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(SINGLEQGATETIMES).o $(QUBITLAYER).o		"
+	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(SINGLEQGATETIMES).o $(QUBITLAYER).o			"
 	@$(CXX) $(CXXFLAGS) -o $(SINGLEQGATETIMES) $(SINGLEQGATETIMES).o $(QUBITLAYER).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 	@if [ -a $(SINGLEQGATETIMES) ] ; \
@@ -95,7 +96,7 @@ $(SINGLEQGATETIMES): $(SINGLEQGATETIMES).o $(QUBITLAYER).o
 	fi;
 
 $(TWOQGATETIMES): $(TWOQGATETIMES).o $(QUBITLAYER).o
-	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(TWOQGATETIMES).o $(QUBITLAYER).o 		"
+	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(TWOQGATETIMES).o $(QUBITLAYER).o 				"
 	@$(CXX) $(CXXFLAGS) -o $(TWOQGATETIMES) $(TWOQGATETIMES).o $(QUBITLAYER).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 	@if [ -a $(TWOQGATETIMES) ] ; \
@@ -103,7 +104,7 @@ $(TWOQGATETIMES): $(TWOQGATETIMES).o $(QUBITLAYER).o
 	fi;
 
 $(THREEQGATETIMES): $(THREEQGATETIMES).o $(QUBITLAYER).o
-	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(THREEQGATETIMES).o $(QUBITLAYER).o 		"
+	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(THREEQGATETIMES).o $(QUBITLAYER).o 			"
 	@$(CXX) $(CXXFLAGS) -o $(THREEQGATETIMES) $(THREEQGATETIMES).o $(QUBITLAYER).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 	@if [ -a $(THREEQGATETIMES) ] ; \
@@ -125,8 +126,22 @@ $(THREEQGATETIMES).o: $(BENCHMARKS)$(THREEQGATETIMES).cpp $(TARGET_DEPS) $(QLAYE
 	@$(CXX) $(DFLAG)=$(NUMQUBITS) $(CXXFLAGS) -c $(BENCHMARKS)$(THREEQGATETIMES).cpp
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 
+eprBenchmark: $(EPR)
+$(EPR): $(EPR).o $(QUBITLAYER).o
+	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(EPR).o $(QUBITLAYER).o					"
+	@$(CXX) $(CXXFLAGS) -o $(EPR) $(EPR).o $(QUBITLAYER).o
+	@printf "%b" "$(GREEN)$(OK_STRING)\n"
+	@if [ -a $(EPR) ] ; \
+	then printf "%b" "$(GREEN)$(SUCCESS_STRING)$(NO_COLOR)\n"; \
+	fi;
+
+$(EPR).o: $(BENCHMARKS)$(EPR).cpp $(TARGET_DEPS) $(QLAYER_DEPS) $(BENCHMARKS)$(TIMERS)
+	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                          			"
+	@$(CXX) $(DFLAG)=$(NUMQUBITS) $(CXXFLAGS) -c $(BENCHMARKS)$(EPR).cpp
+	@printf "%b" "$(GREEN)$(OK_STRING)\n"
+
 cleanObj:
-	@printf "%b" "$(MAGENTA)Removing $(NO_COLOR)object files 				"
+	@printf "%b" "$(MAGENTA)Removing $(NO_COLOR)object files 						"
 	@$(RM) $(objectFiles)
 	@printf "%b" "$(GREEN)$(OK_STRING)$(NO_COLOR)\n"
 
