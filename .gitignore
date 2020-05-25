@@ -5,3 +5,13 @@
 __pycache__/
 
 .DS_STORE
+
+# data
+data/
+
+# plotting script
+experiments.py
+
+# images, figures etc.
+figs/
+*.eps
