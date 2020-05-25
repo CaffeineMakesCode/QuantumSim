@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-numRuns=5
+numRuns=6
 
 function runGateBenchmarks(){
     make singleQBenchmark NUMQUBITS=1
