@@ -15,9 +15,9 @@ int main(){
     QubitLayer q;
     start = Clock::now();
     //apply hadamard to the first qubit
-    q.hadamard(numQubits-1);
+    q.hadamard(1);
     //apply cnot on the 2 qubits
-    q.cnot(numQubits-1, 0);
+    q.cnot(1, 0);
     stop = Clock::now();
     duration = std::chrono::duration_cast<mus>(stop-start).count();
     std::cout << "Execution time ("<< numQubits <<" qubits): " << duration << " µs" << std::endl;
