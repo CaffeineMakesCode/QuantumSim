@@ -23,9 +23,13 @@ void QubitLayer::updateLayer(){
     }
 }
 
+bool QubitLayer::checkZeroState(int qubit){
+    return qL_[2*qubit].imag() || qL_[2*qubit].real();
+}
+
 void QubitLayer::pauliX(int target){
     for (int i = 0; i < numStates; i++){
-        if (abs(qL_[2*i]) > 0){
+        if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
             state.flip(target);
             qL_[2*state.to_ulong()+1] = qL_[2*i];
@@ -36,7 +40,7 @@ void QubitLayer::pauliX(int target){
 
 void QubitLayer::pauliY(int target){
     for (int i = 0; i < numStates; i++){
-        if (abs(qL_[2*i]) > 0){
+        if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
             //add phase of i if bit is 0 (i.e. set)
             if (!state.test(target)){
@@ -55,7 +59,7 @@ void QubitLayer::pauliY(int target){
 
 void QubitLayer::pauliZ(int target){
     for (int i = 0; i < numStates; i++){
-        if (abs(qL_[2*i]) > 0){
+        if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
             //add phase if bit is 1 (i.e. it is set)
             if (state.test(target))
@@ -69,7 +73,7 @@ void QubitLayer::pauliZ(int target){
 
 void QubitLayer::hadamard(int target){
     for (int i = 0; i < numStates; i++){
-        if (abs(qL_[2*i]) > 0){
+        if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
             //change to |-> if bit is 1 (i.e. set)
             if (state.test(target)){
@@ -92,7 +96,7 @@ void QubitLayer::rx(int target, precision theta){
     precision cosTheta = cos(theta/2);
     precision sinTheta = sin(theta/2);
     for (int i = 0; i < numStates; i++){
-        if (abs(qL_[2*i]) > 0){
+        if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
             //action if bit is 1 (i.e. set)
             if (state.test(target)){
@@ -115,7 +119,7 @@ void QubitLayer::ry(int target, precision theta){
     precision cosTheta = cos(theta/2);
     precision sinTheta = sin(theta/2);
     for (int i = 0; i < numStates; i++){
-        if (abs(qL_[2*i]) > 0){
+        if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
             //action if bit is 1 (i.e. set)
             if (state.test(target)){
@@ -138,7 +142,7 @@ void QubitLayer::rz(int target, precision theta){
     precision cosTheta = cos(theta/2);
     precision sinTheta = sin(theta/2);
     for (int i = 0; i < numStates; i++){
-        if (abs(qL_[2*i]) > 0){
+        if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
             //action if bit is 1 (i.e. set)
             if (state.test(target))
@@ -160,7 +164,7 @@ bool QubitLayer::checkControls(int *controls, int numControls, std::bitset<numQu
 
 void QubitLayer::cnot(int control, int target){
     for (int i = 0; i < numStates; i++){
-        if (abs(qL_[2*i]) > 0){
+        if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
             //flip target qubit if control bit(s) is 1 (i.e. set)
             if (state.test(control)){
@@ -176,7 +180,7 @@ void QubitLayer::cnot(int control, int target){
 
 void QubitLayer::toffoli(int control1, int control2, int target){
     for (int i = 0; i < numStates; i++){
-        if (abs(qL_[2*i]) > 0){
+        if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
             //flip target qubit if control bit(s) is 1 (i.e. set)
             if (state.test(control1)&&state.test(control2)){
@@ -192,7 +196,7 @@ void QubitLayer::toffoli(int control1, int control2, int target){
 
 void QubitLayer::mcnot(int *controls, int numControls, int target){
     for (int i = 0; i < numStates; i++){
-        if (abs(qL_[2*i]) > 0){
+        if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
             //flip target qubit if control bit(s) is 1 (i.e. set)
             if (checkControls(controls, numControls, state)){
@@ -208,7 +212,7 @@ void QubitLayer::mcnot(int *controls, int numControls, int target){
 
 void QubitLayer::cphase(int control, int target){
     for (int i = 0; i < numStates; i++){
-        if (abs(qL_[2*i]) > 0){
+        if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
             //add phase to target qubit if control bit(s) is 1 (i.e. set)
             if (state.test(control) && state.test(target))
@@ -222,7 +226,7 @@ void QubitLayer::cphase(int control, int target){
 
 void QubitLayer::mcphase(int *controls, int numControls, int target){
     for (int i = 0; i < numStates; i++){
-        if (abs(qL_[2*i]) > 0){
+        if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
             //add phase to target qubit if control bit(s) is 1 (i.e. set)
             if (checkControls(controls, numControls, state) && state.test(target))

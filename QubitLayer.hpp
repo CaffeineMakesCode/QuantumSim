@@ -24,6 +24,7 @@ class QubitLayer{
         void mcnot(int *controls, int numControls, int target);
         void cphase(int control, int target);
         void mcphase(int *controls, int numControls, int target);
+        bool checkZeroState(int qubit);
         qProb getMaxAmplitude();
         void updateLayer();
         void printMeasurement();
