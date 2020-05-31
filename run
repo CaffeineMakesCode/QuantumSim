@@ -1,6 +1,6 @@
 #!/bin/zsh
 
-numRuns=6
+numRuns=5
 
 function runGateBenchmarks(){
     make singleQBenchmark NUMQUBITS=1
@@ -23,7 +23,8 @@ function runEprBenchmark(){
 
 function runMain(){
     make NUMQUBITS=$1
-    ./main
+    for ((i = 0; i < numRuns; i++));
+        ./main
     make cleanObj
 }
 
