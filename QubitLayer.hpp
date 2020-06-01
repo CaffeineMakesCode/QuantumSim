@@ -27,10 +27,12 @@ class QubitLayer{
         bool checkZeroState(int qubit);
         qProb getMaxAmplitude();
         void updateLayer();
+        void toggleParity();
         void printMeasurement();
         void printQubits();
     private:
         qubitLayer *qL_;
+        bool parity;
 };
 
 #endif
