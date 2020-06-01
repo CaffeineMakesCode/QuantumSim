@@ -24,7 +24,7 @@ void QubitLayer::updateLayer(){
 }
 
 bool QubitLayer::checkZeroState(int qubit){
-    return qL_[2*qubit].imag() || qL_[2*qubit].real();
+    return qL_[2*qubit+(!parity)].imag() || qL_[2*qubit+(!parity)].real();
 }
 
 void QubitLayer::pauliX(int target){
@@ -32,10 +32,11 @@ void QubitLayer::pauliX(int target){
         if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
             state.flip(target);
-            qL_[2*state.to_ulong()+1] = qL_[2*i];
+            qL_[2*state.to_ulong()+parity] = qL_[2*i+(!parity)];
+            qL_[2*i+(!parity)] = {0,0};
         }
     }
-    updateLayer();
+    toggleParity();
 }
 
 void QubitLayer::pauliY(int target){
@@ -77,19 +78,20 @@ void QubitLayer::hadamard(int target){
             std::bitset<numQubits> state = i;
             //change to |-> if bit is 1 (i.e. set)
             if (state.test(target)){
-                qL_[2*i+1] += -hadamardCoef*qL_[2*i];
+                qL_[2*i+parity] += -hadamardCoef*qL_[2*i+(!parity)];
                 state.flip(target);
-                qL_[2*state.to_ulong()+1] += hadamardCoef*qL_[2*i];
+                qL_[2*state.to_ulong()+parity] += hadamardCoef*qL_[2*i+(!parity)];
             }
             //change to |+> if bit is 0 (i.e. not set)
             else{
-                qL_[2*state.to_ulong()+1] += hadamardCoef*qL_[2*i];
+                qL_[2*state.to_ulong()+parity] += hadamardCoef*qL_[2*i+(!parity)];
                 state.flip(target);
-                qL_[2*state.to_ulong()+1] += hadamardCoef*qL_[2*i];
+                qL_[2*state.to_ulong()+parity] += hadamardCoef*qL_[2*i+(!parity)];
             }
+            qL_[2*i+(!parity)] = {0,0};
         }
     }
-    updateLayer();
+    toggleParity();
 }
 
 void QubitLayer::rx(int target, precision theta){
@@ -230,12 +232,13 @@ void QubitLayer::mcphase(int *controls, int numControls, int target){
             std::bitset<numQubits> state = i;
             //add phase to target qubit if control bit(s) is 1 (i.e. set)
             if (checkControls(controls, numControls, state) && state.test(target))
-                qL_[2*i+1] = -qL_[2*i];
+                qL_[2*i+parity] = -qL_[2*i+(!parity)];
             else
-                qL_[2*i+1] = qL_[2*i];
+                qL_[2*i+parity] = qL_[2*i+(!parity)];
+            qL_[2*i+(!parity)] = {0,0};
         }
     }
-    updateLayer();
+    toggleParity();
 }
 
 qProb QubitLayer::getMaxAmplitude(){
@@ -245,7 +248,7 @@ qProb QubitLayer::getMaxAmplitude(){
     float previousProb{0};
     for (int i = 0; i < numStates; i++){
         state = i;
-        currentProb = abs(qL_[2*i]);
+        currentProb = abs(qL_[2*i+(!parity)]);
         if (currentProb > previousProb){
             result.state = state;
             result.prob = currentProb;
@@ -253,6 +256,10 @@ qProb QubitLayer::getMaxAmplitude(){
         previousProb = currentProb;
     }
     return result;
+}
+
+void QubitLayer::toggleParity(){
+    parity = !parity;
 }
 
 void QubitLayer::printMeasurement(){
@@ -266,7 +273,7 @@ void QubitLayer::printQubits(){
     for (int i = 0; i < numStates; i++){
         std::bitset<numQubits> binaryRep = i;
         std::string state = binaryRep.to_string();
-        std::cout<<qL_[i*2]<<", ";
+        std::cout<<qL_[2*i]<<" "<<qL_[2*i+1]<<" ";
         std::cout<<"|"<<state<<">\n"; 
     }
 }

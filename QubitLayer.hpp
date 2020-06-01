@@ -32,7 +32,7 @@ class QubitLayer{
         void printQubits();
     private:
         qubitLayer *qL_;
-        bool parity;
+        bool parity = true;
 };
 
 #endif
