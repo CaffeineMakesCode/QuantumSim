@@ -31,7 +31,8 @@ class QubitLayer{
         void printMeasurement();
         void printQubits();
     private:
-        qubitLayer *qL_;
+        qubitLayer *qEven_;
+        qubitLayer *qOdd_;
         bool parity = true;
 };
 
