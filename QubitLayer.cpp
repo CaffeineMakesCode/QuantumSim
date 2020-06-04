@@ -74,37 +74,30 @@ void QubitLayer::pauliZ(int target){
 }*/
 
 void QubitLayer::hadamard(int target){
-    //#pragma omp parallel for shared(qOdd_, qEven_)
+    omp_lock_t lck;
+    omp_init_lock(&lck);
+    //#pragma omp parallel for reduction(std::complex<double>::operator+= : qEven_, qOdd_)
+    #pragma omp parallel for shared(qEven_, qOdd_)
+    {
     for (int i = 0; i < numStates; i++)
         if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
             //change to |-> if bit is 1 (i.e. set)
-            if (state.test(target)){
-                if (parity){
-                    qOdd_[i] -= hadamardCoef*qEven_[i];
-                    state.flip(target);
-                    qOdd_[state.to_ulong()] += hadamardCoef*qEven_[i];
-                }
-                else{
-                    qEven_[i] -= hadamardCoef*qOdd_[i];
-                    state.flip(target);
-                    qEven_[state.to_ulong()] += hadamardCoef*qOdd_[i];
-                }
+            omp_set_lock(&lck);
+            if (parity){
+                qOdd_[i] += state.test(target) ? -hadamardCoef*qEven_[i] : hadamardCoef*qEven_[i];
+                state.flip(target);
+                qOdd_[state.to_ulong()] += hadamardCoef*qEven_[i];
             }
-            //change to |+> if bit is 0 (i.e. not set)
             else{
-                if (parity){
-                    qOdd_[i] += hadamardCoef*qEven_[i];
-                    state.flip(target);
-                    qOdd_[state.to_ulong()] += hadamardCoef*qEven_[i];
-                }
-                else{
-                    qEven_[i] += hadamardCoef*qOdd_[i];
-                    state.flip(target);
-                    qEven_[state.to_ulong()] += hadamardCoef*qOdd_[i];
-                }
+                qEven_[i] += state.test(target) ? -hadamardCoef*qOdd_[i] : hadamardCoef*qOdd_[i];
+                state.flip(target);
+                qEven_[state.to_ulong()] += hadamardCoef*qOdd_[i];
             }
+            omp_unset_lock(&lck);
         }
+    }
+    omp_destroy_lock(&lck);
     updateLayer();
 }
 
