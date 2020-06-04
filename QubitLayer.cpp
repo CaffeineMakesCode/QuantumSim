@@ -262,7 +262,7 @@ qProb QubitLayer::getMaxAmplitude(){
     precision previousProb{0};
     for (int i = 0; i < numStates; i++){
         state = i;
-        currentProb = parity ? abs(qEven_[i]) : abs(qOdd_[i]);
+        currentProb = parity ? abs(qEven_[i])*abs(qEven_[i]) : abs(qOdd_[i])*abs(qOdd_[i]);
         if (currentProb > previousProb){
             result.state = state;
             result.prob = currentProb;
