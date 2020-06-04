@@ -249,8 +249,8 @@ qProb QubitLayer::getMaxAmplitude(){
         if (currentProb > previousProb){
             result.state = state;
             result.prob = currentProb;
+            previousProb = currentProb;
         }
-        previousProb = currentProb;
     }
     return result;
 }
