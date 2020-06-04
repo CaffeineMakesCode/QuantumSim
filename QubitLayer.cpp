@@ -74,30 +74,29 @@ void QubitLayer::pauliZ(int target){
 }*/
 
 void QubitLayer::hadamard(int target){
-    omp_lock_t lck;
-    omp_init_lock(&lck);
-    //#pragma omp parallel for reduction(std::complex<double>::operator+= : qEven_, qOdd_)
-    #pragma omp parallel for shared(qEven_, qOdd_)
+    //map |1> to -hadamardCoef*|1> and |0> to hadamardCoef*|0>
+    #pragma omp parallel for shared(qOdd_, qEven_)
     {
     for (int i = 0; i < numStates; i++)
         if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
-            //change to |-> if bit is 1 (i.e. set)
-            omp_set_lock(&lck);
-            if (parity){
-                qOdd_[i] += state.test(target) ? -hadamardCoef*qEven_[i] : hadamardCoef*qEven_[i];
-                state.flip(target);
-                qOdd_[state.to_ulong()] += hadamardCoef*qEven_[i];
-            }
-            else{
-                qEven_[i] += state.test(target) ? -hadamardCoef*qOdd_[i] : hadamardCoef*qOdd_[i];
-                state.flip(target);
-                qEven_[state.to_ulong()] += hadamardCoef*qOdd_[i];
-            }
-            omp_unset_lock(&lck);
+            if (state.test(target))
+                parity ? qOdd_[i] -= hadamardCoef*qEven_[i] : qEven_[i] -= hadamardCoef*qOdd_[i];
+            else
+                parity ? qOdd_[i] += hadamardCoef*qEven_[i] : qEven_[i] += hadamardCoef*qOdd_[i];
         }
     }
-    omp_destroy_lock(&lck);
+    #pragma omp barrier
+    //map |0> to hadamardCoef*|1> and |1> to hadamardCoef*|0>
+    #pragma omp parallel for shared(qOdd_, qEven_)
+    {
+    for (int i = 0; i < numStates; i++)
+        if (checkZeroState(i)){
+            std::bitset<numQubits> state = i;
+            state.flip(target);
+            parity ? qOdd_[state.to_ulong()] += hadamardCoef*qEven_[i] : qEven_[state.to_ulong()] += hadamardCoef*qOdd_[i];
+        }
+    }
     updateLayer();
 }
 
