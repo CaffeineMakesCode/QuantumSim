@@ -41,7 +41,7 @@ QubitLayer grover(int dSolution, int numReps){
     return q;
 }
 
-QubitLayer repCode3(int errorLocation, pauliError errorType){
+/*QubitLayer repCode3(int errorLocation, pauliError errorType){
     if (numQubits != 3){
         std::cout<<"\033[31;31m[Error]\033[m"<<std::endl;
         std::cout<<"Number of qubits defined:                            "<<numQubits<<std::endl;
@@ -83,4 +83,4 @@ QubitLayer genEPR(int q1, int q2){
     //apply cnot on the 2 qubits
     q.cnot(q2, q1);
     return q;
-}
+}*/
