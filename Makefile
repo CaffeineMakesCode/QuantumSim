@@ -5,7 +5,8 @@ CXX = clang++
 #  -g    adds debugging information to the executable file
 #  -Wall turns on most, but not all, compiler warnings
 STANDARD = -std=c++17
-CXXFLAGS = -g -Wall $(STANDARD)
+OPENMPFLAGS = -Xpreprocessor -fopenmp
+CXXFLAGS = -g -Wall $(STANDARD) $(OPENMPFLAGS)
 
 # project directories
 TEST = tests/
@@ -62,7 +63,7 @@ all: $(TARGET)
 
 $(TARGET): $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o
 	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o  			"
-	@$(CXX) $(CXXFLAGS) -o $(TARGET) $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o
+	@$(CXX) $(CXXFLAGS) -lomp -o $(TARGET) $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 	@if [ -a $(TARGET) ] ; \
 	then printf "%b" "$(GREEN)$(SUCCESS_STRING)$(NO_COLOR)\n"; \
