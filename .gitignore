@@ -15,3 +15,6 @@ experiments.py
 # images, figures etc.
 figs/
 *.eps
+
+# transfer script
+transfer
