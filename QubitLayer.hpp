@@ -1,5 +1,6 @@
 #ifndef QUBITLAYER_H
 #define QUBITLAYER_H
+#include <bitset>
 #include "definitions.hpp"
 
 struct qProb{
