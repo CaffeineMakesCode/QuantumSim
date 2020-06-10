@@ -154,23 +154,23 @@ bool QubitLayer::checkControls(int *controls, int numControls, std::bitset<numQu
     return (numControls == finalControl);
 }
 
-/*void QubitLayer::cnot(int control, int target){
+void QubitLayer::cnot(int control, int target){
     for (int i = 0; i < numStates; i++){
         if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
             //flip target qubit if control bit(s) is 1 (i.e. set)
             if (state.test(control)){
                 state.flip(target);
-                qL_[2*state.to_ulong()+1] = qL_[2*i];
+                parity ? qOdd_[state.to_ulong()] = qEven_[i] : qEven_[state.to_ulong()] = qOdd_[i];
             }
             else
-                qL_[2*i+1] = qL_[2*i];
+                parity ? qOdd_[i] = qEven_[i] : qEven_[i] = qOdd_[i];
         }
     }
     updateLayer();
 }
 
-void QubitLayer::toffoli(int control1, int control2, int target){
+/*void QubitLayer::toffoli(int control1, int control2, int target){
     for (int i = 0; i < numStates; i++){
         if (checkZeroState(i)){
             std::bitset<numQubits> state = i;

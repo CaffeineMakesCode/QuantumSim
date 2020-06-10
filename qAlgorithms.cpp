@@ -68,7 +68,7 @@ QubitLayer grover(int dSolution, int numReps){
     q.toffoli(2, 1, 0);
     std::cout<<"Final state:"<<std::endl;
     return q;
-}
+}*/
 
 QubitLayer genEPR(int q1, int q2){
     if (numQubits < 2){
@@ -83,4 +83,4 @@ QubitLayer genEPR(int q1, int q2){
     //apply cnot on the 2 qubits
     q.cnot(q2, q1);
     return q;
-}*/
+}
