@@ -158,7 +158,7 @@ void QubitLayer::cnot(int control, int target){
     for (int i = 0; i < numStates; i++){
         if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
-            //flip target qubit if control bit(s) is 1 (i.e. set)
+            //flip target qubit if control bit is 1 (i.e. set)
             if (state.test(control)){
                 state.flip(target);
                 parity ? qOdd_[state.to_ulong()] = qEven_[i] : qEven_[state.to_ulong()] = qOdd_[i];
@@ -170,17 +170,17 @@ void QubitLayer::cnot(int control, int target){
     updateLayer();
 }
 
-/*void QubitLayer::toffoli(int control1, int control2, int target){
+void QubitLayer::toffoli(int control1, int control2, int target){
     for (int i = 0; i < numStates; i++){
         if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
-            //flip target qubit if control bit(s) is 1 (i.e. set)
-            if (state.test(control1)&&state.test(control2)){
+            //flip target qubit if control bits are 1 (i.e. set)
+            if (state.test(control1) && state.test(control2)){
                 state.flip(target);
-                qL_[2*state.to_ulong()+1] = qL_[2*i];
+                parity ? qOdd_[state.to_ulong()] = qEven_[i] : qEven_[state.to_ulong()] = qOdd_[i];
             }
             else
-                qL_[2*i+1] = qL_[2*i];
+                parity ? qOdd_[i] = qEven_[i] : qEven_[i] = qOdd_[i];
         }
     }
     updateLayer();
@@ -193,10 +193,10 @@ void QubitLayer::mcnot(int *controls, int numControls, int target){
             //flip target qubit if control bit(s) is 1 (i.e. set)
             if (checkControls(controls, numControls, state)){
                 state.flip(target);
-                qL_[2*state.to_ulong()+1] = qL_[2*i];
+                parity ? qOdd_[state.to_ulong()] = qEven_[i] : qEven_[state.to_ulong()] = qOdd_[i];
             }
             else
-                qL_[2*i+1] = qL_[2*i];
+                parity ? qOdd_[i] = qEven_[i] : qEven_[i] = qOdd_[i];
         }
     }
     updateLayer();
@@ -206,33 +206,25 @@ void QubitLayer::cphase(int control, int target){
     for (int i = 0; i < numStates; i++){
         if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
-            //add phase to target qubit if control bit(s) is 1 (i.e. set)
+            //add phase to target qubit if control bit and target bits are 1 (i.e. set)
             if (state.test(control) && state.test(target))
-                qL_[2*i+1] = -qL_[2*i];
+                parity ? qOdd_[i] = -qEven_[i] : qEven_[i] = -qOdd_[i];
             else
-                qL_[2*i+1] = qL_[2*i];
+                parity ? qOdd_[i] = qEven_[i] : qEven_[i] = qOdd_[i];
         }
     }
     updateLayer();
-}*/
+}
 
 void QubitLayer::mcphase(int *controls, int numControls, int target){
     for (int i = 0; i < numStates; i++){
         if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
-            //add phase to target qubit if control bit(s) is 1 (i.e. set)
-            if (checkControls(controls, numControls, state) && state.test(target)){
-                if (parity)
-                    qOdd_[i] = -qEven_[i];
-                else
-                    qEven_[i] = -qOdd_[i];
-            }
-            else{
-                if (parity)
-                    qOdd_[i] = qEven_[i];
-                else
-                    qEven_[i] = qOdd_[i];
-            }
+            //add phase to target qubit if control bit(s) and target bit is 1 (i.e. set)
+            if (checkControls(controls, numControls, state) && state.test(target))
+                parity ? qOdd_[i] = -qEven_[i] : qEven_[i] = -qOdd_[i];
+            else
+                parity ? qOdd_[i] = qEven_[i] : qEven_[i] = qOdd_[i];
         }
     }
     updateLayer();
