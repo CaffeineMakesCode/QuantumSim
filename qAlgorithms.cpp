@@ -41,7 +41,7 @@ QubitLayer grover(int dSolution, int numReps){
     return q;
 }
 
-/*QubitLayer repCode3(int errorLocation, pauliError errorType){
+QubitLayer repCode3(int errorLocation, pauliError errorType){
     if (numQubits != 3){
         std::cout<<"\033[31;31m[Error]\033[m"<<std::endl;
         std::cout<<"Number of qubits defined:                            "<<numQubits<<std::endl;
@@ -68,7 +68,7 @@ QubitLayer grover(int dSolution, int numReps){
     q.toffoli(2, 1, 0);
     std::cout<<"Final state:"<<std::endl;
     return q;
-}*/
+}
 
 QubitLayer genEPR(int q1, int q2){
     if (numQubits < 2){
