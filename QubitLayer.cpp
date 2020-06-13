@@ -76,7 +76,6 @@ void QubitLayer::pauliZ(int target){
 void QubitLayer::hadamard(int target){
     //map |1> to -hadamardCoef*|1> and |0> to hadamardCoef*|0>
     #pragma omp parallel for shared(qOdd_, qEven_)
-    {
     for (int i = 0; i < numStates; i++)
         if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
@@ -85,18 +84,15 @@ void QubitLayer::hadamard(int target){
             else
                 parity ? qOdd_[i] += hadamardCoef*qEven_[i] : qEven_[i] += hadamardCoef*qOdd_[i];
         }
-    }
     #pragma omp barrier
     //map |0> to hadamardCoef*|1> and |1> to hadamardCoef*|0>
     #pragma omp parallel for shared(qOdd_, qEven_)
-    {
     for (int i = 0; i < numStates; i++)
         if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
             state.flip(target);
             parity ? qOdd_[state.to_ulong()] += hadamardCoef*qEven_[i] : qEven_[state.to_ulong()] += hadamardCoef*qOdd_[i];
         }
-    }
     updateLayer();
 }
 
