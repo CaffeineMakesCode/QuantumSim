@@ -1,5 +1,5 @@
 #compiler being used
-CXX = clang++
+CXX = g++
 
 # compiler flags:
 #  -g    adds debugging information to the executable file
