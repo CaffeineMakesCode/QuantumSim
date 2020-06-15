@@ -123,10 +123,10 @@ void QubitLayer::rz(int target, precision theta){
             std::bitset<numQubits> state = i;
             //action if bit is 1 (i.e. set)
             if (state.test(target))
-                parity ? qOdd_[i] += cosTheta*qEven_[2*i] + complexImg*sinTheta*qEven_[2*i] : qEven_[i] += cosTheta*qOdd_[2*i] + complexImg*sinTheta*qOdd_[2*i];
+                parity ? qOdd_[i] += cosTheta*qEven_[i] + complexImg*sinTheta*qEven_[i] : qEven_[i] += cosTheta*qOdd_[i] + complexImg*sinTheta*qOdd_[i];
             //action if bit is 0 (i.e. not set)
             else
-                parity ? qOdd_[i] += cosTheta*qEven_[2*i] - complexImg*sinTheta*qEven_[2*i] : qEven_[i] += cosTheta*qOdd_[2*i] - complexImg*sinTheta*qOdd_[2*i];
+                parity ? qOdd_[i] += cosTheta*qEven_[i] - complexImg*sinTheta*qEven_[i] : qEven_[i] += cosTheta*qOdd_[i] - complexImg*sinTheta*qOdd_[i];
 
         }
     }
