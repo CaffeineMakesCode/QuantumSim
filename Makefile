@@ -4,7 +4,7 @@ CXX = g++
 # compiler flags:
 #  -g    adds debugging information to the executable file
 #  -Wall turns on most, but not all, compiler warnings
-STANDARD = -std=c++17
+STANDARD = -std=c++11
 CXXFLAGS = -g -Wall $(STANDARD)
 
 # project directories
