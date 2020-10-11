@@ -8,11 +8,13 @@ STANDARD = -std=c++17
 CXXFLAGS = -g -Wall $(STANDARD)
 
 # project directories
-TEST = tests/
 BENCHMARKS = benchmarks/
 
 # the build target executable
 TARGET = main
+
+# test file
+TESTS = tests
 
 # the dependencies
 TARGET_DEPS  = definitions.hpp
@@ -29,10 +31,10 @@ THREEQGATETIMES = threeQGateTimes
 EPR = epr
 
 # list of object files
-objectFiles = $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o $(SINGLEQGATETIMES).o $(TWOQGATETIMES).o $(THREEQGATETIMES).o $(EPR).o
+objectFiles = $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o $(SINGLEQGATETIMES).o $(TWOQGATETIMES).o $(THREEQGATETIMES).o $(EPR).o $(TESTS).o
 
 #list of executables
-executables = $(TARGET) $(SINGLEQGATETIMES) $(TWOQGATETIMES) $(THREEQGATETIMES) $(EPR)
+executables = $(TARGET) $(SINGLEQGATETIMES) $(TWOQGATETIMES) $(THREEQGATETIMES) $(EPR) $(TESTS)
 
 # debug directory
 DEBUG = main.dSYM
@@ -149,3 +151,17 @@ clean:
 	@printf "%b" "$(MAGENTA)Removing $(NO_COLOR)executables and object files 				"
 	@$(RM) $(executables) $(objectFiles)
 	@printf "%b" "$(GREEN)$(OK_STRING)$(NO_COLOR)\n"
+
+# testing
+tests: $(TESTS).o $(QUBITLAYER).o
+	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(TESTS).o $(QUBITLAYER).o					"
+	@$(CXX) $(CXXFLAGS) -o $(TESTS) $(TESTS).o $(QUBITLAYER).o
+	@printf "%b" "$(GREEN)$(OK_STRING)\n"
+	@if [ -a $(TESTS) ] ; \
+	then printf "%b" "$(GREEN)$(SUCCESS_STRING)$(NO_COLOR)\n"; \
+	fi;
+
+$(TESTS).o: $(TESTS).cpp $(TARGET_DEPS) $(QLAYER_DEPS)
+	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                             			"
+	@$(CXX) $(CXXFLAGS) -c $(TESTS).cpp
+	@printf "%b" "$(GREEN)$(OK_STRING)\n"
