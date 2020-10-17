@@ -252,3 +252,11 @@ void QubitLayer::printQubits(){
         std::cout<<"|"<<state<<">\n"; 
     }
 }
+
+qubitLayer *QubitLayer::getQubitLayerEven(){
+    return qEven_;
+}
+
+qubitLayer *QubitLayer::getQubitLayerOdd(){
+    return qOdd_;
+}
