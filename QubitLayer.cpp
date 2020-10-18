@@ -6,11 +6,11 @@
 QubitLayer::QubitLayer(qubitLayer *qL){
     qEven_ = new qubitLayer[numStates];
     qOdd_ = new qubitLayer[numStates];
-    qEven_[0] = {1,0};
-    if (!(qL == nullptr)){
-        for (int row=0; row<numStates; row++)
-            qEven_[row] = qEven_[row];
-    }
+    if (!(qL == nullptr))
+        for (int row = 0; row < numStates; row++)
+            qEven_[row] = qL[row];
+    else
+        qEven_[0] = {1,0};
 }
 
 QubitLayer::~QubitLayer(){
