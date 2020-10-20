@@ -73,7 +73,7 @@ $(TARGET): $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o
 
 $(TARGET).o: $(TARGET).cpp $(TARGET_DEPS) $(QLAYER_DEPS)
 	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                             			"
-	@$(CXX) $(CXXFLAGS) -c $(TARGET).cpp
+	@$(CXX) $(DFLAG)=$(NUMQUBITS) $(CXXFLAGS) -c $(TARGET).cpp
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 
 $(QUBITLAYER).o: $(QUBITLAYER).cpp $(TARGET_DEPS) $(QLAYER_DEPS)
@@ -83,12 +83,23 @@ $(QUBITLAYER).o: $(QUBITLAYER).cpp $(TARGET_DEPS) $(QLAYER_DEPS)
 
 $(EXAMPLES).o: $(EXAMPLES).cpp $(TARGET_DEPS) $(QLAYER_DEPS) $(EXAMPLES_DEPS)
 	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                      			"
-	@$(CXX) $(CXXFLAGS) -c $(EXAMPLES).cpp
+	@$(CXX) $(DFLAG)=$(NUMQUBITS) $(CXXFLAGS) -c $(EXAMPLES).cpp
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 
+benchmark: 
+	@make singleQBenchmark 
+	@make twoQBenchmark
+	@make threeQBenchmark
+	@printf "%b" "$(GREEN) Running benchmarks...$(NO_COLOR)\n"
+	@./$(SINGLEQGATETIMES)
+	@./$(TWOQGATETIMES)
+	@./$(THREEQGATETIMES)
+	@$(RM) $(executables)
 singleQBenchmark: $(SINGLEQGATETIMES)
+singleQBenchmark: NUMQUBITS = 1
 twoQBenchmark: $(TWOQGATETIMES)
 threeQBenchmark: $(THREEQGATETIMES)
+threeQBenchmark: NUMQUBITS = 3
 
 $(SINGLEQGATETIMES): $(SINGLEQGATETIMES).o $(QUBITLAYER).o
 	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(SINGLEQGATETIMES).o $(QUBITLAYER).o			"
@@ -97,6 +108,7 @@ $(SINGLEQGATETIMES): $(SINGLEQGATETIMES).o $(QUBITLAYER).o
 	@if [ -a $(SINGLEQGATETIMES) ] ; \
 	then printf "%b" "$(GREEN)$(SUCCESS_STRING)$(NO_COLOR)\n"; \
 	fi;
+	@$(RM) $(objectFiles)
 
 $(TWOQGATETIMES): $(TWOQGATETIMES).o $(QUBITLAYER).o
 	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(TWOQGATETIMES).o $(QUBITLAYER).o 				"
@@ -105,6 +117,7 @@ $(TWOQGATETIMES): $(TWOQGATETIMES).o $(QUBITLAYER).o
 	@if [ -a $(TWOQGATETIMES) ] ; \
 	then printf "%b" "$(GREEN)$(SUCCESS_STRING)$(NO_COLOR)\n"; \
 	fi;
+	@$(RM) $(objectFiles)
 
 $(THREEQGATETIMES): $(THREEQGATETIMES).o $(QUBITLAYER).o
 	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(THREEQGATETIMES).o $(QUBITLAYER).o 			"
@@ -113,6 +126,7 @@ $(THREEQGATETIMES): $(THREEQGATETIMES).o $(QUBITLAYER).o
 	@if [ -a $(THREEQGATETIMES) ] ; \
 	then printf "%b" "$(GREEN)$(SUCCESS_STRING)$(NO_COLOR)\n"; \
 	fi;
+	@$(RM) $(objectFiles)
 
 $(SINGLEQGATETIMES).o: $(BENCHMARKS)$(SINGLEQGATETIMES).cpp $(TARGET_DEPS) $(QLAYER_DEPS) $(BENCHMARKS)$(TIMERS)
 	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                          		"
