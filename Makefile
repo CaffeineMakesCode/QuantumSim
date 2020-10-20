@@ -56,10 +56,12 @@ MAGENTA  = \033[35;35m
 NO_COLOR = \033[m
 
 # info strings
-SUCCESS_STRING = "Compiled\ successfully!"
-COM_STRING	   = "Compiling"
-LINK_STRING	   = "Linking"
-OK_STRING	   = "OK"
+SUCCESS_STRING    = "Compiled\ successfully!"
+COM_STRING	      = "Compiling"
+LINK_STRING	      = "Linking"
+OK_STRING	      = "OK"
+TESTS_STRING      = "Running\ tests..."
+BENCHMARKS_STRING = "Running\ benchmarks..."
 
 all: $(TARGET)
 
@@ -90,10 +92,12 @@ benchmark:
 	@make singleQBenchmark 
 	@make twoQBenchmark
 	@make threeQBenchmark
-	@printf "%b" "$(GREEN) Running benchmarks...$(NO_COLOR)\n"
+	@printf "%b" "$(BLUE)$(BENCHMARKS_STRING)$(NO_COLOR)\n"
+	@printf "%b" "$(BLUE)=================Gate Times==================$(NO_COLOR)\n"
 	@./$(SINGLEQGATETIMES)
 	@./$(TWOQGATETIMES)
 	@./$(THREEQGATETIMES)
+	@printf "%b" "$(BLUE)=============================================$(NO_COLOR)\n"
 	@$(RM) $(executables)
 singleQBenchmark: $(SINGLEQGATETIMES)
 singleQBenchmark: NUMQUBITS = 1
@@ -175,10 +179,9 @@ check: $(TESTS)
 $(TESTS): $(TESTS).o $(QUBITLAYER).o
 	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(TESTS).o $(QUBITLAYER).o					"
 	@$(CXX) $(CXXFLAGS) -o $(TESTS) $(TESTS).o $(QUBITLAYER).o
-
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 	@if [ -a $(TESTS) ] ; \
-	then printf "%b" "$(GREEN)$(SUCCESS_STRING) Running tests...$(NO_COLOR) \n"; \
+	then printf "%b" "$(GREEN)$(SUCCESS_STRING)$(TESTS_STRING)$(NO_COLOR)\n"; \
 	fi;
 	@./tests	
 	@$(RM) $(executables) $(objectFiles)

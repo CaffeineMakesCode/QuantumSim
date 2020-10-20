@@ -37,7 +37,7 @@ void testGate(Gates gate){
 }
 
 int main(){
-    std::cout<<"\033[34;34m===========Test Results===========\033[m"<<std::endl;
+    std::cout << "\033[34;34m===========Test Results===========\033[m" << std::endl;
     for (int gate = X; gate <= mcphase; gate++)
         testGate(static_cast<Gates>(gate));
 }

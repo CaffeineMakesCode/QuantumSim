@@ -18,8 +18,8 @@ void runGate(Gates gate){
     std::string gateName;
     start = Clock::now();
     switch(gate){
-        case cnot : q.cnot(0, 1); gateName = "CNOT   "; break;
-        case cphase : q.cphase(0, 1); gateName = "CPHASE "; break;
+        case cnot : q.cnot(0, 1); gateName = "CNOT    "; break;
+        case cphase : q.cphase(0, 1); gateName = "CPHASE  "; break;
         default : q.cnot(0, 1); gateName = "Init"; break;
     }
     stop = Clock::now();
@@ -29,9 +29,8 @@ void runGate(Gates gate){
 }
 
 int main(){
-    std::cout <<"--Two qubit gate times-----------------" << std::endl;
+    std::cout << "\033[34;34m---------------Two Qubit Gates---------------\033[m" << std::endl;
     std::cout <<"Number of qubits: "<< numQubits << std::endl;
     for (int gate = init; gate <= cphase; gate++ )
         runGate(static_cast<Gates>(gate));
-    std::cout <<"---------------------------------------" << std::endl;
 }
