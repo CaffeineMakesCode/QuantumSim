@@ -21,6 +21,7 @@ TARGET_DEPS  = definitions.hpp
 QLAYER_DEPS = QubitLayer.hpp
 EXAMPLES_DEPS = qAlgorithms.hpp
 TIMERS = timers.hpp
+TESTS_DEPS = tests.hpp
 
 # the other source files
 QUBITLAYER = QubitLayer
@@ -72,7 +73,7 @@ $(TARGET): $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o
 
 $(TARGET).o: $(TARGET).cpp $(TARGET_DEPS) $(QLAYER_DEPS)
 	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                             			"
-	@$(CXX) $(DFLAG)=$(NUMQUBITS) $(CXXFLAGS) -c $(TARGET).cpp
+	@$(CXX) $(CXXFLAGS) -c $(TARGET).cpp
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 
 $(QUBITLAYER).o: $(QUBITLAYER).cpp $(TARGET_DEPS) $(QLAYER_DEPS)
@@ -82,7 +83,7 @@ $(QUBITLAYER).o: $(QUBITLAYER).cpp $(TARGET_DEPS) $(QLAYER_DEPS)
 
 $(EXAMPLES).o: $(EXAMPLES).cpp $(TARGET_DEPS) $(QLAYER_DEPS) $(EXAMPLES_DEPS)
 	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                      			"
-	@$(CXX) $(DFLAG)=$(NUMQUBITS) $(CXXFLAGS) -c $(EXAMPLES).cpp
+	@$(CXX) $(CXXFLAGS) -c $(EXAMPLES).cpp
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 
 singleQBenchmark: $(SINGLEQGATETIMES)
@@ -129,6 +130,7 @@ $(THREEQGATETIMES).o: $(BENCHMARKS)$(THREEQGATETIMES).cpp $(TARGET_DEPS) $(QLAYE
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 
 eprBenchmark: $(EPR)
+
 $(EPR): $(EPR).o $(QUBITLAYER).o
 	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(EPR).o $(QUBITLAYER).o					"
 	@$(CXX) $(CXXFLAGS) -o $(EPR) $(EPR).o $(QUBITLAYER).o
@@ -152,16 +154,22 @@ clean:
 	@$(RM) $(executables) $(objectFiles)
 	@printf "%b" "$(GREEN)$(OK_STRING)$(NO_COLOR)\n"
 
-# testing
-tests: $(TESTS).o $(QUBITLAYER).o
+# testing (first set number of qubits to 3)
+check: NUMQUBITS = 3
+check: $(TESTS)
+
+$(TESTS): $(TESTS).o $(QUBITLAYER).o
 	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(TESTS).o $(QUBITLAYER).o					"
 	@$(CXX) $(CXXFLAGS) -o $(TESTS) $(TESTS).o $(QUBITLAYER).o
+
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 	@if [ -a $(TESTS) ] ; \
-	then printf "%b" "$(GREEN)$(SUCCESS_STRING)$(NO_COLOR)\n"; \
+	then printf "%b" "$(GREEN)$(SUCCESS_STRING) Running tests...$(NO_COLOR) \n"; \
 	fi;
+	@./tests	
+	@$(RM) $(executables) $(objectFiles)
 
-$(TESTS).o: $(TESTS).cpp $(TARGET_DEPS) $(QLAYER_DEPS)
+$(TESTS).o: $(TESTS).cpp $(TARGET_DEPS) $(QLAYER_DEPS) $(TESTS_DEPS)
 	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                             			"
-	@$(CXX) $(CXXFLAGS) -c $(TESTS).cpp
+	@$(CXX) $(CXXFLAGS) $(DFLAG)=$(NUMQUBITS) -c $(TESTS).cpp
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
