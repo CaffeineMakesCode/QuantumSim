@@ -13,16 +13,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    # - name: configure
-    #   run: ./configure
     - name: make check
       run: make check
-      shell: bash
     - name: make
       run: make
-      shell: bash
-    # - name: make distcheck
-    #   run: make distcheck
 
   build-macos:
 
@@ -30,11 +24,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    # - name: configure
-    #   run: ./configure
     - name: make check
       run: make check
     - name: make
       run: make
-    # - name: make distcheck
-    #   run: make distcheck
