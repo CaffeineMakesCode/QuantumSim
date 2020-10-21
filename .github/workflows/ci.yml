@@ -1,4 +1,4 @@
-name: C/C++ CI
+name: QuantumSim CI
 
 on:
   push:
@@ -10,6 +10,8 @@ jobs:
   build-linux:
 
     runs-on: ubuntu-latest
+
+    shell: bash
 
     steps:
     - uses: actions/checkout@v2
