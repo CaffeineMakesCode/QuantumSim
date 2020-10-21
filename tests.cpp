@@ -6,7 +6,7 @@
 // list of quantum gates
 enum Gates { X, Y, Z, Hadamard, rx, ry, rz , cnot, cphase , toffoli , mcnot, mcphase };
 
-void testGate(Gates gate){
+bool testGate(Gates gate){
     // initalise state to |111> so all gates can change the state
     qubitLayer testInput[8] = {zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, {1,0}};
     QubitLayer q = QubitLayer(testInput);
@@ -28,16 +28,20 @@ void testGate(Gates gate){
         case mcphase : q.mcphase(ctrlQubits, 2, 2); testerGate = mcphaseTester; break;
         default : q.rx(0, pi); break;
     }
-    // define bool that stores the result of the test
+    // define variable to store the result of the test
     bool testResult = true;
     // iterate over the states to check if the gates work
     for (int i = 0; i < numStates; i++)
         testResult = *(q.getQubitLayerOdd() + i) == testerGate.outputState[i] && testResult;
     std::cout << testerGate.gateName << (testResult ? " \033[32;32m[PASSED]\033[m" : " \033[31;31m[FAILED]\033[m") << std::endl;
+    return testResult;
 }
 
 int main(){
+    // define variable to store result of the tests
+    bool testResult = true;
     std::cout << "\033[34;34m===========Test Results===========\033[m" << std::endl;
     for (int gate = X; gate <= mcphase; gate++)
-        testGate(static_cast<Gates>(gate));
+        testResult = testGate(static_cast<Gates>(gate)) && testResult;
+    return testResult ? EXIT_SUCCESS : EXIT_FAILURE;
 }
