@@ -13,7 +13,7 @@ struct TesterGate{
 // gates with their output states
 TesterGate pauliXtester = {
     .gateName = "Pauli X ",
-    .outputState = {zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, {1,1}, zeroComplex},
+    .outputState = {zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, {1,0}, zeroComplex},
 };
 
 TesterGate pauliYtester = {
