@@ -180,9 +180,7 @@ $(TESTS): $(TESTS).o $(QUBITLAYER).o
 	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(TESTS).o $(QUBITLAYER).o					"
 	@$(CXX) $(CXXFLAGS) -o $(TESTS) $(TESTS).o $(QUBITLAYER).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
-	@if [ -a $(TESTS) ] ; \
-	then printf "%b" "$(GREEN)$(SUCCESS_STRING)$(TESTS_STRING)$(NO_COLOR)\n"; \
-	fi;
+	@printf "%b" "$(GREEN)$(SUCCESS_STRING) $(TESTS_STRING)$(NO_COLOR)\n";
 	@./tests	
 	@$(RM) $(executables) $(objectFiles)
 
