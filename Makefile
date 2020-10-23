@@ -4,17 +4,18 @@ CXX = g++
 # compiler flags:
 #  -g    adds debugging information to the executable file
 #  -Wall turns on most, but not all, compiler warnings
-STANDARD = -std=c++17
-OPENMPFLAGS = -Xpreprocessor -fopenmp
-CXXFLAGS = -g -Wall $(STANDARD) $(OPENMPFLAGS)
-
 # set linker flag for OpenMP based on OS
-ifeq ($(detected_OS),Darwin)        # Mac OS X
+ifeq ($(detected_OS),Darwin)
     OMPLINKERFLAG = -lomp
+	OPENMPFLAGS = -Xpreprocessor -fopenmp
 endif
 ifeq ($(detected_OS),Linux)
     OMPLINKERFLAG = -lgomp
+	OPENMPFLAGS = -fopenmp
 endif
+STANDARD = -std=c++17
+CXXFLAGS = -g -Wall $(STANDARD) $(OPENMPFLAGS)
+
 
 # project directories
 BENCHMARKS = benchmarks/
