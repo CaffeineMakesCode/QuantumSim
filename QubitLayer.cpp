@@ -39,7 +39,8 @@ void QubitLayer::pauliX(int target){
     updateLayer();
 }
 
-/*void QubitLayer::pauliY(int target){
+void QubitLayer::pauliY(int target){
+    #pragma omp parallel for shared(qOdd_, qEven_)
     for (int i = 0; i < numStates; i++){
         if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
@@ -57,6 +58,7 @@ void QubitLayer::pauliX(int target){
 }
 
 void QubitLayer::pauliZ(int target){
+    #pragma omp parallel for shared(qOdd_, qEven_)
     for (int i = 0; i < numStates; i++){
         if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
@@ -68,7 +70,7 @@ void QubitLayer::pauliZ(int target){
         }
     }
     updateLayer();
-}*/
+}
 
 void QubitLayer::hadamard(int target){
     //map |1> to -hadamardCoef*|1> and |0> to hadamardCoef*|0>
