@@ -2,7 +2,6 @@
 #include <iostream>
 #include <cmath>
 #include <algorithm>
-#include <omp.h>
 #include "QubitLayer.hpp"
 
 QubitLayer::QubitLayer(qubitLayer *qL){
