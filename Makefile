@@ -9,17 +9,20 @@ OPENMPFLAGS = -Xpreprocessor -fopenmp
 CXXFLAGS = -g -Wall $(STANDARD) $(OPENMPFLAGS)
 
 # project directories
-TEST = tests/
 BENCHMARKS = benchmarks/
 
 # the build target executable
 TARGET = main
+
+# test file
+TESTS = tests
 
 # the dependencies
 TARGET_DEPS  = definitions.hpp
 QLAYER_DEPS = QubitLayer.hpp
 EXAMPLES_DEPS = qAlgorithms.hpp
 TIMERS = timers.hpp
+TESTS_DEPS = tests.hpp
 
 # the other source files
 QUBITLAYER = QubitLayer
@@ -30,10 +33,10 @@ THREEQGATETIMES = threeQGateTimes
 EPR = epr
 
 # list of object files
-objectFiles = $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o $(SINGLEQGATETIMES).o $(TWOQGATETIMES).o $(THREEQGATETIMES).o $(EPR).o
+objectFiles = $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o $(SINGLEQGATETIMES).o $(TWOQGATETIMES).o $(THREEQGATETIMES).o $(EPR).o $(TESTS).o
 
 #list of executables
-executables = $(TARGET) $(SINGLEQGATETIMES) $(TWOQGATETIMES) $(THREEQGATETIMES) $(EPR)
+executables = $(TARGET) $(SINGLEQGATETIMES) $(TWOQGATETIMES) $(THREEQGATETIMES) $(EPR) $(TESTS)
 
 # debug directory
 DEBUG = main.dSYM
@@ -54,10 +57,12 @@ MAGENTA  = \033[35;35m
 NO_COLOR = \033[m
 
 # info strings
-SUCCESS_STRING = "Compiled\ successfully!"
-COM_STRING	   = "Compiling"
-LINK_STRING	   = "Linking"
-OK_STRING	   = "OK"
+SUCCESS_STRING    = "Compiled\ successfully!"
+COM_STRING	      = "Compiling"
+LINK_STRING	      = "Linking"
+OK_STRING	      = "OK"
+TESTS_STRING      = "Running\ tests..."
+BENCHMARKS_STRING = "Running\ benchmarks..."
 
 all: $(TARGET)
 
@@ -65,9 +70,7 @@ $(TARGET): $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o
 	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o  			"
 	@$(CXX) $(CXXFLAGS) -lomp -o $(TARGET) $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
-	@if [ -a $(TARGET) ] ; \
-	then printf "%b" "$(GREEN)$(SUCCESS_STRING)$(NO_COLOR)\n"; \
-	fi;
+	@printf "%b" "$(GREEN)$(SUCCESS_STRING)$(NO_COLOR)\n";
 
 $(TARGET).o: $(TARGET).cpp $(TARGET_DEPS) $(QLAYER_DEPS)
 	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                             			"
@@ -84,33 +87,49 @@ $(EXAMPLES).o: $(EXAMPLES).cpp $(TARGET_DEPS) $(QLAYER_DEPS) $(EXAMPLES_DEPS)
 	@$(CXX) $(DFLAG)=$(NUMQUBITS) $(CXXFLAGS) -c $(EXAMPLES).cpp
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 
+benchmark: 
+	@make singleQBenchmark 
+	@make twoQBenchmark
+	@make threeQBenchmark
+	@printf "%b" "$(BLUE)$(BENCHMARKS_STRING)$(NO_COLOR)\n"
+	@printf "%b" "$(BLUE)=================Gate Times==================$(NO_COLOR)\n"
+	@./$(SINGLEQGATETIMES)
+	@./$(TWOQGATETIMES)
+	@./$(THREEQGATETIMES)
+	@printf "%b" "$(BLUE)=============================================$(NO_COLOR)\n"
+	@$(RM) $(executables)
 singleQBenchmark: $(SINGLEQGATETIMES)
+singleQBenchmark: NUMQUBITS = 1
 twoQBenchmark: $(TWOQGATETIMES)
 threeQBenchmark: $(THREEQGATETIMES)
+threeQBenchmark: NUMQUBITS = 3
 
 $(SINGLEQGATETIMES): $(SINGLEQGATETIMES).o $(QUBITLAYER).o
 	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(SINGLEQGATETIMES).o $(QUBITLAYER).o			"
-	@$(CXX) $(CXXFLAGS) -o $(SINGLEQGATETIMES) $(SINGLEQGATETIMES).o $(QUBITLAYER).o
+	@$(CXX) $(CXXFLAGS) -lomp -o $(SINGLEQGATETIMES) $(SINGLEQGATETIMES).o $(QUBITLAYER).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 	@if [ -a $(SINGLEQGATETIMES) ] ; \
 	then printf "%b" "$(GREEN)$(SUCCESS_STRING)$(NO_COLOR)\n"; \
 	fi;
+	@$(RM) $(objectFiles)
 
 $(TWOQGATETIMES): $(TWOQGATETIMES).o $(QUBITLAYER).o
 	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(TWOQGATETIMES).o $(QUBITLAYER).o 				"
-	@$(CXX) $(CXXFLAGS) -o $(TWOQGATETIMES) $(TWOQGATETIMES).o $(QUBITLAYER).o
+	@$(CXX) $(CXXFLAGS) -lomp -o $(TWOQGATETIMES) $(TWOQGATETIMES).o $(QUBITLAYER).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 	@if [ -a $(TWOQGATETIMES) ] ; \
 	then printf "%b" "$(GREEN)$(SUCCESS_STRING)$(NO_COLOR)\n"; \
 	fi;
+	@$(RM) $(objectFiles)
 
 $(THREEQGATETIMES): $(THREEQGATETIMES).o $(QUBITLAYER).o
 	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(THREEQGATETIMES).o $(QUBITLAYER).o 			"
-	@$(CXX) $(CXXFLAGS) -o $(THREEQGATETIMES) $(THREEQGATETIMES).o $(QUBITLAYER).o
+	@$(CXX) $(CXXFLAGS) -lomp -o $(THREEQGATETIMES) $(THREEQGATETIMES).o $(QUBITLAYER).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 	@if [ -a $(THREEQGATETIMES) ] ; \
 	then printf "%b" "$(GREEN)$(SUCCESS_STRING)$(NO_COLOR)\n"; \
 	fi;
+	@$(RM) $(objectFiles)
 
 $(SINGLEQGATETIMES).o: $(BENCHMARKS)$(SINGLEQGATETIMES).cpp $(TARGET_DEPS) $(QLAYER_DEPS) $(BENCHMARKS)$(TIMERS)
 	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                          		"
@@ -128,9 +147,10 @@ $(THREEQGATETIMES).o: $(BENCHMARKS)$(THREEQGATETIMES).cpp $(TARGET_DEPS) $(QLAYE
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 
 eprBenchmark: $(EPR)
+
 $(EPR): $(EPR).o $(QUBITLAYER).o
 	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(EPR).o $(QUBITLAYER).o					"
-	@$(CXX) $(CXXFLAGS) -o $(EPR) $(EPR).o $(QUBITLAYER).o
+	@$(CXX) $(CXXFLAGS) -lomp -o $(EPR) $(EPR).o $(QUBITLAYER).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 	@if [ -a $(EPR) ] ; \
 	then printf "%b" "$(GREEN)$(SUCCESS_STRING)$(NO_COLOR)\n"; \
@@ -150,3 +170,20 @@ clean:
 	@printf "%b" "$(MAGENTA)Removing $(NO_COLOR)executables and object files 				"
 	@$(RM) $(executables) $(objectFiles)
 	@printf "%b" "$(GREEN)$(OK_STRING)$(NO_COLOR)\n"
+
+# testing (first set number of qubits to 3)
+check: NUMQUBITS = 3
+check: $(TESTS)
+
+$(TESTS): $(TESTS).o $(QUBITLAYER).o
+	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(TESTS).o $(QUBITLAYER).o					"
+	@$(CXX) $(CXXFLAGS) -lomp -o $(TESTS) $(TESTS).o $(QUBITLAYER).o
+	@printf "%b" "$(GREEN)$(OK_STRING)\n"
+	@printf "%b" "$(GREEN)$(SUCCESS_STRING) $(TESTS_STRING)$(NO_COLOR)\n";
+	@./tests	
+	@$(RM) $(executables) $(objectFiles)
+
+$(TESTS).o: $(TESTS).cpp $(TARGET_DEPS) $(QLAYER_DEPS) $(TESTS_DEPS)
+	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                             			"
+	@$(CXX) $(CXXFLAGS) $(DFLAG)=$(NUMQUBITS) -c $(TESTS).cpp
+	@printf "%b" "$(GREEN)$(OK_STRING)\n"

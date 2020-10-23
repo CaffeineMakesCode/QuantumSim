@@ -31,9 +31,8 @@ void runGate(Gates gate){
 }
 
 int main(){
-    std::cout <<"--Single qubit gate times--------------" << std::endl;
+    std::cout << "\033[34;34m-------------Single Qubit Gates--------------\033[m" << std::endl;
     std::cout <<"Number of qubits: "<< numQubits << std::endl;
     for (int gate = init; gate <= rz; gate++)
         runGate(static_cast<Gates>(gate));
-    std::cout <<"---------------------------------------" << std::endl;
 }
