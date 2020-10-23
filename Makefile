@@ -1,20 +1,27 @@
+# get the name of the OS
+OS_NAME := $(shell uname -s | tr A-Z a-z)
+
 #compiler being used
 CXX = g++
 
 # compiler flags:
 #  -g    adds debugging information to the executable file
 #  -Wall turns on most, but not all, compiler warnings
-# set linker flag for OpenMP based on OS
-ifeq ($(detected_OS),Darwin)
-    OMPLINKERFLAG = -lomp
-	OPENMPFLAGS = -Xpreprocessor -fopenmp
-endif
-ifeq ($(detected_OS),Linux)
-    OMPLINKERFLAG = -lgomp
-	OPENMPFLAGS = -fopenmp
-endif
 STANDARD = -std=c++17
+OPENMPFLAGS = -fopenmp
 CXXFLAGS = -g -Wall $(STANDARD) $(OPENMPFLAGS)
+
+# set linker flag for OpenMP based on OS
+ifeq ($(OS_NAME), darwin)
+    OMPLINKERFLAG = -lomp
+endif
+ifeq ($(OS_NAME), linux)
+    OMPLINKERFLAG = -lgomp
+endif
+# add flag to OPENMPFLAGS if OS is MacOS
+ifeq ($(OS_NAME), darwin)
+    OPENMPFLAGS = -Xpreprocessor -fopenmp
+endif
 
 
 # project directories
