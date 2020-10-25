@@ -12,17 +12,17 @@ struct TesterGate{
 // gates with their output states
 TesterGate pauliXtester = {
     .gateName = "Pauli X ",
-    .outputState = {zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, {1,0}, zeroComplex},
+    .outputState = {zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, {1, 0}, zeroComplex},
 };
 
 TesterGate pauliYtester = {
     .gateName = "Pauli Y ",
-    .outputState = {zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, {0,-1}, zeroComplex},
+    .outputState = {zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, {0, -1}, zeroComplex},
 };
 
 TesterGate pauliZtester = {
     .gateName = "Pauli Z ",
-    .outputState = {zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, {-1,-0}},
+    .outputState = {zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, {-1, 0}},
 };
 
 TesterGate hadamardTester = {
