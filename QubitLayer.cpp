@@ -41,7 +41,7 @@ void QubitLayer::pauliX(int target){
 
 void QubitLayer::pauliY(int target){
     #pragma omp parallel for shared(qOdd_, qEven_)
-    for (int i = 0; i < numStates; i++){
+    for (int i = 0; i < numStates; i++)
         if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
             //flip qubit
@@ -53,13 +53,12 @@ void QubitLayer::pauliY(int target){
             else
                 parity ? qOdd_[state.to_ulong()] = complexImg*qEven_[i] : qEven_[state.to_ulong()] = complexImg*qOdd_[i];
         }
-    }
     updateLayer();
 }
 
 void QubitLayer::pauliZ(int target){
     #pragma omp parallel for shared(qOdd_, qEven_)
-    for (int i = 0; i < numStates; i++){
+    for (int i = 0; i < numStates; i++)
         if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
             //add phase if bit is 1 (i.e. it is set)
@@ -68,7 +67,6 @@ void QubitLayer::pauliZ(int target){
             else
                 parity ? qOdd_[i] = qEven_[i] : qEven_[i] = qOdd_[i];
         }
-    }
     updateLayer();
 }
 
@@ -167,7 +165,8 @@ bool QubitLayer::checkControls(int *controls, int numControls, std::bitset<numQu
     return (numControls == finalControl);
 }
 
-/*void QubitLayer::cnot(int control, int target){
+void QubitLayer::cnot(int control, int target){
+    #pragma omp parallel for shared(qOdd_, qEven_)
     for (int i = 0; i < numStates; i++){
         if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
@@ -184,7 +183,8 @@ bool QubitLayer::checkControls(int *controls, int numControls, std::bitset<numQu
 }
 
 void QubitLayer::toffoli(int control1, int control2, int target){
-    for (int i = 0; i < numStates; i++){
+    #pragma omp parallel for shared(qOdd_, qEven_)
+    for (int i = 0; i < numStates; i++)
         if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
             //flip target qubit if control bits are 1 (i.e. set)
@@ -195,12 +195,12 @@ void QubitLayer::toffoli(int control1, int control2, int target){
             else
                 parity ? qOdd_[i] = qEven_[i] : qEven_[i] = qOdd_[i];
         }
-    }
     updateLayer();
 }
 
 void QubitLayer::mcnot(int *controls, int numControls, int target){
-    for (int i = 0; i < numStates; i++){
+    #pragma omp parallel for shared(qOdd_, qEven_)
+    for (int i = 0; i < numStates; i++)
         if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
             //flip target qubit if control bit(s) is 1 (i.e. set)
@@ -211,12 +211,12 @@ void QubitLayer::mcnot(int *controls, int numControls, int target){
             else
                 parity ? qOdd_[i] = qEven_[i] : qEven_[i] = qOdd_[i];
         }
-    }
     updateLayer();
 }
 
 void QubitLayer::cphase(int control, int target){
-    for (int i = 0; i < numStates; i++){
+    #pragma omp parallel for shared(qOdd_, qEven_)
+    for (int i = 0; i < numStates; i++)
         if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
             //add phase to target qubit if control bit and target bits are 1 (i.e. set)
@@ -225,13 +225,12 @@ void QubitLayer::cphase(int control, int target){
             else
                 parity ? qOdd_[i] = qEven_[i] : qEven_[i] = qOdd_[i];
         }
-    }
     updateLayer();
-}*/
+}
 
 void QubitLayer::mcphase(int *controls, int numControls, int target){
     #pragma omp parallel for shared(qOdd_, qEven_)
-    for (int i = 0; i < numStates; i++){
+    for (int i = 0; i < numStates; i++)
         if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
             //add phase to target qubit if control bit(s) and target bit is 1 (i.e. set)
@@ -240,7 +239,6 @@ void QubitLayer::mcphase(int *controls, int numControls, int target){
             else
                 parity ? qOdd_[i] = qEven_[i] : qEven_[i] = qOdd_[i];
         }
-    }
     updateLayer();
 }
 
