@@ -1,6 +1,6 @@
 #include <iostream>
 #include <cassert>
-#include "QubitLayer.hpp"
+#include "../src/QubitLayer.hpp"
 #include "tests.hpp"
 
 // list of quantum gates

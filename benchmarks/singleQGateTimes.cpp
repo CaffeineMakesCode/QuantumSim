@@ -5,7 +5,7 @@
 #define numQubits 1
 #endif
 #include "timers.hpp"
-#include "../QubitLayer.hpp"
+#include "../src/QubitLayer.hpp"
 
 // list of single qubit gates
 enum Gates { init, X, Y, Z, Hadamard, rx, ry, rz };
