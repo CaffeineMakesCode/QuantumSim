@@ -45,7 +45,7 @@ TesterGate ryTester = {
 
 TesterGate rzTester = {
     .gateName = "Rz      ",
-    .outputState = {zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, {cosPi, 1}},
+    .outputState = {zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, {cosPi, sinPi}},
 };
 
 TesterGate cnotTester = {

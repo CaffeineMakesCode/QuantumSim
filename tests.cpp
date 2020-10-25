@@ -4,7 +4,7 @@
 #include "tests.hpp"
 
 // list of quantum gates
-enum Gates { X, Y, Z, Hadamard, mcphase };
+enum Gates { X, Y, Z, rx, ry, rz, Hadamard, mcphase };
 
 bool testGate(Gates gate){
     // initalise state to |111> so all gates can change the state
@@ -18,9 +18,9 @@ bool testGate(Gates gate){
         case Y : q.pauliY(0); testerGate = pauliYtester; break;
         case Z : q.pauliZ(0); testerGate = pauliZtester; break;
         case Hadamard : q.hadamard(0); testerGate = hadamardTester; break;
-        // case rx : q.rx(0, pi); testerGate = rxTester; break;
-        // case ry : q.ry(0, pi); testerGate = ryTester; break;
-        // case rz : q.rz(0, pi); testerGate = rzTester; break;
+        case rx : q.rx(0, pi); testerGate = rxTester; break;
+        case ry : q.ry(0, pi); testerGate = ryTester; break;
+        case rz : q.rz(0, pi); testerGate = rzTester; break;
         // case cnot : q.cnot(0, 1); testerGate = cnotTester; break;
         // case cphase : q.cphase(0, 1); testerGate = cphaseTester; break;
         // case toffoli : q.toffoli(0, 1, 2); testerGate = toffoliTester; break;

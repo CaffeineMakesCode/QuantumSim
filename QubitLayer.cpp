@@ -95,43 +95,59 @@ void QubitLayer::hadamard(int target){
     updateLayer();
 }
 
-/*void QubitLayer::rx(int target, precision theta){
+void QubitLayer::rx(int target, precision theta){
+    //compute the sine and cosine of the rotation angle
     precision cosTheta = cos(theta/2);
     precision sinTheta = sin(theta/2);
-    for (int i = 0; i < numStates; i++){
+    //map |0> to cosTheta*|0> and |1> to cosTheta*|1>
+    #pragma omp parallel for shared(qOdd_, qEven_)
+    for (int i = 0; i < numStates; i++)
+        if (checkZeroState(i))
+            parity ? qOdd_[i] += cosTheta*qEven_[i] : qEven_[i] += cosTheta*qOdd_[i];
+    #pragma omp barrier
+    //map |1> to -isinTheta*|0> and |0> to -isineTheta*|1>
+    #pragma omp parallel for shared(qOdd_, qEven_)
+    for (int i = 0; i < numStates; i++)
         if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
-            parity ? qOdd_[i] += cosTheta*qEven_[i] : qEven_[i] += cosTheta*qOdd_[i];
             state.flip(target);
             parity ? qOdd_[state.to_ulong()] += -complexImg*sinTheta*qEven_[i] : qEven_[state.to_ulong()] += -complexImg*sinTheta*qOdd_[i];
         }
-    }
     updateLayer();
 }
 
 void QubitLayer::ry(int target, precision theta){
+    //compute the sine and cosine of the rotation angle
     precision cosTheta = cos(theta/2);
     precision sinTheta = sin(theta/2);
-    for (int i = 0; i < numStates; i++){
+    //map |1> to cosTheta*|1> and |0> to cosTheta*|0>
+    #pragma omp parallel for shared(qOdd_, qEven_)
+    for (int i = 0; i < numStates; i++)
+        if (checkZeroState(i))
+            parity ? qOdd_[i] += cosTheta*qEven_[i] : qEven_[i] += cosTheta*qOdd_[i];
+    #pragma omp barrier
+    //map |0> to sinTheta*|1> and |1> to -sinTheta*|0>
+    #pragma omp parallel for shared(qOdd_, qEven_)
+    for (int i = 0; i < numStates; i++)
         if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
-            parity ? qOdd_[i] += cosTheta*qEven_[i] : qEven_[i] += cosTheta*qOdd_[i];
             state.flip(target);
             //action if bit is 1 (i.e. set)
             if (state.test(target))
-                parity ? qOdd_[state.to_ulong()] -= sinTheta*qEven_[i] : qEven_[state.to_ulong()] -= sinTheta*qOdd_[i];
+                parity ? qOdd_[state.to_ulong()] += sinTheta*qEven_[i] : qEven_[state.to_ulong()] += sinTheta*qOdd_[i];
             //action if bit is 0 (i.e. not set)
             else
-                parity ? qOdd_[state.to_ulong()] += sinTheta*qEven_[i] : qEven_[state.to_ulong()] += sinTheta*qOdd_[i];
+                parity ? qOdd_[state.to_ulong()] -= sinTheta*qEven_[i] : qEven_[state.to_ulong()] -= sinTheta*qOdd_[i];
         }
-    }
     updateLayer();
 }
 
 void QubitLayer::rz(int target, precision theta){
+    //compute the sine and cosine of the rotation angle
     precision cosTheta = cos(theta/2);
     precision sinTheta = sin(theta/2);
-    for (int i = 0; i < numStates; i++){
+    #pragma omp parallel for shared(qOdd_, qEven_)
+    for (int i = 0; i < numStates; i++)
         if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
             //action if bit is 1 (i.e. set)
@@ -140,11 +156,9 @@ void QubitLayer::rz(int target, precision theta){
             //action if bit is 0 (i.e. not set)
             else
                 parity ? qOdd_[i] += cosTheta*qEven_[i] - complexImg*sinTheta*qEven_[i] : qEven_[i] += cosTheta*qOdd_[i] - complexImg*sinTheta*qOdd_[i];
-
         }
-    }
     updateLayer();
-}*/
+}
 
 bool QubitLayer::checkControls(int *controls, int numControls, std::bitset<numQubits> state){
     int finalControl{0};
