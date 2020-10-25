@@ -38,7 +38,7 @@ void QubitLayer::pauliX(int target){
 }
 
 void QubitLayer::pauliY(int target){
-    for (int i = 0; i < numStates; i++){
+    for (int i = 0; i < numStates; i++)
         if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
             //flip qubit
@@ -50,12 +50,11 @@ void QubitLayer::pauliY(int target){
             else
                 parity ? qOdd_[state.to_ulong()] = complexImg*qEven_[i] : qEven_[state.to_ulong()] = complexImg*qOdd_[i];
         }
-    }
     updateLayer();
 }
 
 void QubitLayer::pauliZ(int target){
-    for (int i = 0; i < numStates; i++){
+    for (int i = 0; i < numStates; i++)
         if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
             //add phase if bit is 1 (i.e. it is set)
@@ -64,7 +63,6 @@ void QubitLayer::pauliZ(int target){
             else
                 parity ? qOdd_[i] = qEven_[i] : qEven_[i] = qOdd_[i];
         }
-    }
     updateLayer();
 }
 
@@ -85,21 +83,20 @@ void QubitLayer::hadamard(int target){
 void QubitLayer::rx(int target, precision theta){
     precision cosTheta = cos(theta/2);
     precision sinTheta = sin(theta/2);
-    for (int i = 0; i < numStates; i++){
+    for (int i = 0; i < numStates; i++)
         if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
             parity ? qOdd_[i] += cosTheta*qEven_[i] : qEven_[i] += cosTheta*qOdd_[i];
             state.flip(target);
             parity ? qOdd_[state.to_ulong()] += -complexImg*sinTheta*qEven_[i] : qEven_[state.to_ulong()] += -complexImg*sinTheta*qOdd_[i];
         }
-    }
     updateLayer();
 }
 
 void QubitLayer::ry(int target, precision theta){
     precision cosTheta = cos(theta/2);
     precision sinTheta = sin(theta/2);
-    for (int i = 0; i < numStates; i++){
+    for (int i = 0; i < numStates; i++)
         if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
             parity ? qOdd_[i] += cosTheta*qEven_[i] : qEven_[i] += cosTheta*qOdd_[i];
@@ -111,14 +108,13 @@ void QubitLayer::ry(int target, precision theta){
             else
                 parity ? qOdd_[state.to_ulong()] += sinTheta*qEven_[i] : qEven_[state.to_ulong()] += sinTheta*qOdd_[i];
         }
-    }
     updateLayer();
 }
 
 void QubitLayer::rz(int target, precision theta){
     precision cosTheta = cos(theta/2);
     precision sinTheta = sin(theta/2);
-    for (int i = 0; i < numStates; i++){
+    for (int i = 0; i < numStates; i++)
         if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
             //action if bit is 1 (i.e. set)
@@ -129,7 +125,6 @@ void QubitLayer::rz(int target, precision theta){
                 parity ? qOdd_[i] += cosTheta*qEven_[i] - complexImg*sinTheta*qEven_[i] : qEven_[i] += cosTheta*qOdd_[i] - complexImg*sinTheta*qOdd_[i];
 
         }
-    }
     updateLayer();
 }
 
@@ -141,7 +136,7 @@ bool QubitLayer::checkControls(int *controls, int numControls, std::bitset<numQu
 }
 
 void QubitLayer::cnot(int control, int target){
-    for (int i = 0; i < numStates; i++){
+    for (int i = 0; i < numStates; i++)
         if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
             //flip target qubit if control bit is 1 (i.e. set)
@@ -152,12 +147,11 @@ void QubitLayer::cnot(int control, int target){
             else
                 parity ? qOdd_[i] = qEven_[i] : qEven_[i] = qOdd_[i];
         }
-    }
     updateLayer();
 }
 
 void QubitLayer::toffoli(int control1, int control2, int target){
-    for (int i = 0; i < numStates; i++){
+    for (int i = 0; i < numStates; i++)
         if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
             //flip target qubit if control bits are 1 (i.e. set)
@@ -168,12 +162,11 @@ void QubitLayer::toffoli(int control1, int control2, int target){
             else
                 parity ? qOdd_[i] = qEven_[i] : qEven_[i] = qOdd_[i];
         }
-    }
     updateLayer();
 }
 
 void QubitLayer::mcnot(int *controls, int numControls, int target){
-    for (int i = 0; i < numStates; i++){
+    for (int i = 0; i < numStates; i++)
         if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
             //flip target qubit if control bit(s) is 1 (i.e. set)
@@ -184,12 +177,11 @@ void QubitLayer::mcnot(int *controls, int numControls, int target){
             else
                 parity ? qOdd_[i] = qEven_[i] : qEven_[i] = qOdd_[i];
         }
-    }
     updateLayer();
 }
 
 void QubitLayer::cphase(int control, int target){
-    for (int i = 0; i < numStates; i++){
+    for (int i = 0; i < numStates; i++)
         if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
             //add phase to target qubit if control bit and target bits are 1 (i.e. set)
@@ -198,12 +190,11 @@ void QubitLayer::cphase(int control, int target){
             else
                 parity ? qOdd_[i] = qEven_[i] : qEven_[i] = qOdd_[i];
         }
-    }
     updateLayer();
 }
 
 void QubitLayer::mcphase(int *controls, int numControls, int target){
-    for (int i = 0; i < numStates; i++){
+    for (int i = 0; i < numStates; i++)
         if (checkZeroState(i)){
             std::bitset<numQubits> state = i;
             //add phase to target qubit if control bit(s) and target bit is 1 (i.e. set)
@@ -212,7 +203,6 @@ void QubitLayer::mcphase(int *controls, int numControls, int target){
             else
                 parity ? qOdd_[i] = qEven_[i] : qEven_[i] = qOdd_[i];
         }
-    }
     updateLayer();
 }
 
