@@ -1,6 +1,7 @@
 #ifndef TESTS_H
 #define TESTS_H
 #include <complex>
+#include "../src/definitions.hpp"
 
 constexpr int numStatesTest{8};
 

@@ -2,8 +2,8 @@
 #include <complex>
 #include <string>
 #include "timers.hpp"
-#include "../QubitLayer.hpp"
-#include "../definitions.hpp"
+#include "../src/QubitLayer.hpp"
+#include "../src/definitions.hpp"
 
 int main(){
     if (numQubits < 2){
