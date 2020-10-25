@@ -103,10 +103,10 @@ void QubitLayer::ry(int target, precision theta){
             state.flip(target);
             //action if bit is 1 (i.e. set)
             if (state.test(target))
-                parity ? qOdd_[state.to_ulong()] -= sinTheta*qEven_[i] : qEven_[state.to_ulong()] -= sinTheta*qOdd_[i];
+                parity ? qOdd_[state.to_ulong()] += sinTheta*qEven_[i] : qEven_[state.to_ulong()] += sinTheta*qOdd_[i];
             //action if bit is 0 (i.e. not set)
             else
-                parity ? qOdd_[state.to_ulong()] += sinTheta*qEven_[i] : qEven_[state.to_ulong()] += sinTheta*qOdd_[i];
+                parity ? qOdd_[state.to_ulong()] -= sinTheta*qEven_[i] : qEven_[state.to_ulong()] -= sinTheta*qOdd_[i];
         }
     updateLayer();
 }
