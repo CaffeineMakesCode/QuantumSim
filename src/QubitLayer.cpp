@@ -30,9 +30,9 @@ bool QubitLayer::checkZeroState(int qubit){
 
 void QubitLayer::pauliX(int target){
     #pragma omp parallel for shared(qOdd_, qEven_)
-    for (int i = 0; i < numStates; i++)
+    for (unsigned long long int i = 0; i < numStates; i++)
         if (checkZeroState(i)){
-            std::bitset<numQubits> state = i;
+            std::bitset<maxQubits> state = i;
             state.flip(target);
             parity ? qOdd_[state.to_ulong()] = qEven_[i] : qEven_[state.to_ulong()] = qOdd_[i];
         }
@@ -41,9 +41,9 @@ void QubitLayer::pauliX(int target){
 
 void QubitLayer::pauliY(int target){
     #pragma omp parallel for shared(qOdd_, qEven_)
-    for (int i = 0; i < numStates; i++)
+    for (unsigned long long int i = 0; i < numStates; i++)
         if (checkZeroState(i)){
-            std::bitset<numQubits> state = i;
+            std::bitset<maxQubits> state = i;
             //flip qubit
             state.flip(target);
             //add phase of -i if bit was 1 (i.e. set) and flip it
@@ -58,9 +58,9 @@ void QubitLayer::pauliY(int target){
 
 void QubitLayer::pauliZ(int target){
     #pragma omp parallel for shared(qOdd_, qEven_)
-    for (int i = 0; i < numStates; i++)
+    for (unsigned long long int i = 0; i < numStates; i++)
         if (checkZeroState(i)){
-            std::bitset<numQubits> state = i;
+            std::bitset<maxQubits> state = i;
             //add phase if bit is 1 (i.e. it is set)
             if (state.test(target))
                 parity ? qOdd_[i] = -qEven_[i] : qEven_[i] = -qOdd_[i];
@@ -73,9 +73,9 @@ void QubitLayer::pauliZ(int target){
 void QubitLayer::hadamard(int target){
     //map |1> to -hadamardCoef*|1> and |0> to hadamardCoef*|0>
     #pragma omp parallel for shared(qOdd_, qEven_)
-    for (int i = 0; i < numStates; i++)
+    for (unsigned long long int i = 0; i < numStates; i++)
         if (checkZeroState(i)){
-            std::bitset<numQubits> state = i;
+            std::bitset<maxQubits> state = i;
             if (state.test(target))
                 parity ? qOdd_[i] -= hadamardCoef*qEven_[i] : qEven_[i] -= hadamardCoef*qOdd_[i];
             else
@@ -84,9 +84,9 @@ void QubitLayer::hadamard(int target){
     #pragma omp barrier
     //map |0> to hadamardCoef*|1> and |1> to hadamardCoef*|0>
     #pragma omp parallel for shared(qOdd_, qEven_)
-    for (int i = 0; i < numStates; i++)
+    for (unsigned long long int i = 0; i < numStates; i++)
         if (checkZeroState(i)){
-            std::bitset<numQubits> state = i;
+            std::bitset<maxQubits> state = i;
             state.flip(target);
             parity ? qOdd_[state.to_ulong()] += hadamardCoef*qEven_[i] : qEven_[state.to_ulong()] += hadamardCoef*qOdd_[i];
         }
@@ -99,15 +99,15 @@ void QubitLayer::rx(int target, precision theta){
     precision sinTheta = sin(theta/2);
     //map |0> to cosTheta*|0> and |1> to cosTheta*|1>
     #pragma omp parallel for shared(qOdd_, qEven_)
-    for (int i = 0; i < numStates; i++)
+    for (unsigned long long int i = 0; i < numStates; i++)
         if (checkZeroState(i))
             parity ? qOdd_[i] += cosTheta*qEven_[i] : qEven_[i] += cosTheta*qOdd_[i];
     #pragma omp barrier
     //map |1> to -isinTheta*|0> and |0> to -isineTheta*|1>
     #pragma omp parallel for shared(qOdd_, qEven_)
-    for (int i = 0; i < numStates; i++)
+    for (unsigned long long int i = 0; i < numStates; i++)
         if (checkZeroState(i)){
-            std::bitset<numQubits> state = i;
+            std::bitset<maxQubits> state = i;
             state.flip(target);
             parity ? qOdd_[state.to_ulong()] += -complexImg*sinTheta*qEven_[i] : qEven_[state.to_ulong()] += -complexImg*sinTheta*qOdd_[i];
         }
@@ -120,15 +120,15 @@ void QubitLayer::ry(int target, precision theta){
     precision sinTheta = sin(theta/2);
     //map |1> to cosTheta*|1> and |0> to cosTheta*|0>
     #pragma omp parallel for shared(qOdd_, qEven_)
-    for (int i = 0; i < numStates; i++)
+    for (unsigned long long int i = 0; i < numStates; i++)
         if (checkZeroState(i))
             parity ? qOdd_[i] += cosTheta*qEven_[i] : qEven_[i] += cosTheta*qOdd_[i];
     #pragma omp barrier
     //map |0> to sinTheta*|1> and |1> to -sinTheta*|0>
     #pragma omp parallel for shared(qOdd_, qEven_)
-    for (int i = 0; i < numStates; i++)
+    for (unsigned long long int i = 0; i < numStates; i++)
         if (checkZeroState(i)){
-            std::bitset<numQubits> state = i;
+            std::bitset<maxQubits> state = i;
             state.flip(target);
             //action if bit is 1 (i.e. set)
             if (state.test(target))
@@ -145,9 +145,9 @@ void QubitLayer::rz(int target, precision theta){
     precision cosTheta = cos(theta/2);
     precision sinTheta = sin(theta/2);
     #pragma omp parallel for shared(qOdd_, qEven_)
-    for (int i = 0; i < numStates; i++)
+    for (unsigned long long int i = 0; i < numStates; i++)
         if (checkZeroState(i)){
-            std::bitset<numQubits> state = i;
+            std::bitset<maxQubits> state = i;
             //action if bit is 1 (i.e. set)
             if (state.test(target))
                 parity ? qOdd_[i] += cosTheta*qEven_[i] + complexImg*sinTheta*qEven_[i] : qEven_[i] += cosTheta*qOdd_[i] + complexImg*sinTheta*qOdd_[i];
@@ -158,7 +158,7 @@ void QubitLayer::rz(int target, precision theta){
     updateLayer();
 }
 
-bool QubitLayer::checkControls(int *controls, int numControls, std::bitset<numQubits> state){
+bool QubitLayer::checkControls(int *controls, int numControls, std::bitset<maxQubits> state){
     int finalControl{0};
     for (int i = 0; i < numControls; i++)
         finalControl += state.test(controls[i]);
@@ -167,9 +167,9 @@ bool QubitLayer::checkControls(int *controls, int numControls, std::bitset<numQu
 
 void QubitLayer::cnot(int control, int target){
     #pragma omp parallel for shared(qOdd_, qEven_)
-    for (int i = 0; i < numStates; i++){
+    for (unsigned long long int i = 0; i < numStates; i++){
         if (checkZeroState(i)){
-            std::bitset<numQubits> state = i;
+            std::bitset<maxQubits> state = i;
             //flip target qubit if control bit is 1 (i.e. set)
             if (state.test(control)){
                 state.flip(target);
@@ -184,9 +184,9 @@ void QubitLayer::cnot(int control, int target){
 
 void QubitLayer::toffoli(int control1, int control2, int target){
     #pragma omp parallel for shared(qOdd_, qEven_)
-    for (int i = 0; i < numStates; i++)
+    for (unsigned long long int i = 0; i < numStates; i++)
         if (checkZeroState(i)){
-            std::bitset<numQubits> state = i;
+            std::bitset<maxQubits> state = i;
             //flip target qubit if control bits are 1 (i.e. set)
             if (state.test(control1) && state.test(control2)){
                 state.flip(target);
@@ -200,9 +200,9 @@ void QubitLayer::toffoli(int control1, int control2, int target){
 
 void QubitLayer::mcnot(int *controls, int numControls, int target){
     #pragma omp parallel for shared(qOdd_, qEven_)
-    for (int i = 0; i < numStates; i++)
+    for (unsigned long long int i = 0; i < numStates; i++)
         if (checkZeroState(i)){
-            std::bitset<numQubits> state = i;
+            std::bitset<maxQubits> state = i;
             //flip target qubit if control bit(s) is 1 (i.e. set)
             if (checkControls(controls, numControls, state)){
                 state.flip(target);
@@ -216,9 +216,9 @@ void QubitLayer::mcnot(int *controls, int numControls, int target){
 
 void QubitLayer::cphase(int control, int target){
     #pragma omp parallel for shared(qOdd_, qEven_)
-    for (int i = 0; i < numStates; i++)
+    for (unsigned long long int i = 0; i < numStates; i++)
         if (checkZeroState(i)){
-            std::bitset<numQubits> state = i;
+            std::bitset<maxQubits> state = i;
             //add phase to target qubit if control bit and target bits are 1 (i.e. set)
             if (state.test(control) && state.test(target))
                 parity ? qOdd_[i] = -qEven_[i] : qEven_[i] = -qOdd_[i];
@@ -230,9 +230,9 @@ void QubitLayer::cphase(int control, int target){
 
 void QubitLayer::mcphase(int *controls, int numControls, int target){
     #pragma omp parallel for shared(qOdd_, qEven_)
-    for (int i = 0; i < numStates; i++)
+    for (unsigned long long int i = 0; i < numStates; i++)
         if (checkZeroState(i)){
-            std::bitset<numQubits> state = i;
+            std::bitset<maxQubits> state = i;
             //add phase to target qubit if control bit(s) and target bit is 1 (i.e. set)
             if (checkControls(controls, numControls, state) && state.test(target))
                 parity ? qOdd_[i] = -qEven_[i] : qEven_[i] = -qOdd_[i];
@@ -243,11 +243,11 @@ void QubitLayer::mcphase(int *controls, int numControls, int target){
 }
 
 qProb QubitLayer::getMaxAmplitude(){
-    std::bitset<numQubits> state;
+    std::bitset<maxQubits> state;
     qProb result;
     precision currentProb{0};
     precision previousProb{0};
-    for (int i = 0; i < numStates; i++){
+    for (unsigned long long int i = 0; i < numStates; i++){
         state = i;
         currentProb = parity ? abs(qEven_[i])*abs(qEven_[i]) : abs(qOdd_[i])*abs(qOdd_[i]);
         if (currentProb > previousProb){
@@ -271,8 +271,8 @@ void QubitLayer::printMeasurement(){
 
 void QubitLayer::printQubits(){
     std::cout<<"Amplitude, "<<"State \n";
-    for (int i = 0; i < numStates; i++){
-        std::bitset<numQubits> binaryRep = i;
+    for (unsigned long long int i = 0; i < numStates; i++){
+        std::bitset<maxQubits> binaryRep = i;
         std::string state = binaryRep.to_string();
         std::cout<<qEven_[i]<<" "<<qOdd_[i]<<" ";
         std::cout<<"|"<<state<<">\n"; 
