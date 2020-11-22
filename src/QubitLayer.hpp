@@ -4,7 +4,7 @@
 #include "definitions.hpp"
 
 struct qProb{
-    std::bitset<numQubits> state;
+    std::bitset<maxQubits> state;
     precision prob;
 };
 
@@ -19,7 +19,7 @@ class QubitLayer{
         void rx(int target, precision theta);
         void ry(int target, precision theta);
         void rz(int target, precision theta);
-        bool checkControls(int *controls, int numControls, std::bitset<numQubits> state);
+        bool checkControls(int *controls, int numControls, std::bitset<maxQubits> state);
         void cnot(int control, int target);
         void toffoli(int control1, int control2, int target);
         void mcnot(int *controls, int numControls, int target);
