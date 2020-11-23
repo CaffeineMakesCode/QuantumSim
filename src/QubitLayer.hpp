@@ -10,7 +10,7 @@ struct qProb{
 
 class QubitLayer{
     public:
-        QubitLayer(qubitLayer *qL = nullptr);
+        QubitLayer(unsigned int numQubits, qubitLayer *qL = nullptr);
         ~QubitLayer();
         void pauliX(int target);
         void pauliY(int target);
@@ -33,7 +33,11 @@ class QubitLayer{
         void printQubits();
         qubitLayer *getQubitLayerEven();
         qubitLayer *getQubitLayerOdd();
+        unsigned long long int getNumStates();
+        unsigned int getNumQubits();
     private:
+        unsigned int numQubits;
+        unsigned long long int numStates;
         qubitLayer *qEven_;
         qubitLayer *qOdd_;
         bool parity = true;

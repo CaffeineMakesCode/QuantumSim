@@ -4,9 +4,15 @@
 #include <algorithm>
 #include "QubitLayer.hpp"
 
-QubitLayer::QubitLayer(qubitLayer *qL){
+QubitLayer::QubitLayer(unsigned int numQubits, qubitLayer *qL){
+    // calculate the number of states
+    numStates = 1;
+    for (unsigned int i = 0; i < numQubits; i++)
+        numStates *= 2;
+    // allocate memory for arrays
     qEven_ = new qubitLayer[numStates];
     qOdd_ = new qubitLayer[numStates];
+    // if input is provided then use that to fill the input qubit state
     if (!(qL == nullptr))
         for (int row = 0; row < numStates; row++)
             qEven_[row] = qL[row];
@@ -286,3 +292,7 @@ qubitLayer *QubitLayer::getQubitLayerEven(){
 qubitLayer *QubitLayer::getQubitLayerOdd(){
     return qOdd_;
 }
+
+unsigned long long int QubitLayer::getNumStates(){ return numStates; }
+
+unsigned int QubitLayer::getNumQubits(){ return numQubits; }
