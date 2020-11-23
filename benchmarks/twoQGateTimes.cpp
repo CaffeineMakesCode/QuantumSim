@@ -1,17 +1,14 @@
 #include <iostream>
 #include <complex>
 #include <string>
-#ifndef numQubits
-#define numQubits 2
-#endif
 #include "timers.hpp"
 #include "../src/QubitLayer.hpp"
 
 // list of single qubit gates
 enum Gates { init, cnot, cphase };
 
-void runGate(Gates gate){
-    QubitLayer q;
+void runGate(unsigned int numQubits, Gates gate){
+    QubitLayer q(numQubits);
     //initliase qubit to |11> to let both gates run
     q.pauliX(0);
     q.pauliX(1);
@@ -29,8 +26,10 @@ void runGate(Gates gate){
 }
 
 int main(){
+    // define number of qubits (1) for this benchmark
+    unsigned int n = 2;
     std::cout << "\033[34;34m---------------Two Qubit Gates---------------\033[m" << std::endl;
-    std::cout <<"Number of qubits: "<< numQubits << std::endl;
+    std::cout <<"Number of qubits: "<< n << std::endl;
     for (int gate = init; gate <= cphase; gate++ )
-        runGate(static_cast<Gates>(gate));
+        runGate(n, static_cast<Gates>(gate));
 }
