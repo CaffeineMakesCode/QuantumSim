@@ -9,7 +9,7 @@ enum Gates { X, Y, Z, Hadamard, rx, ry, rz , cnot, cphase , toffoli , mcnot, mcp
 bool testGate(Gates gate){
     // initalise state to |111> so all gates can change the state
     qubitLayer testInput[8] = {zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, {1,0}};
-    QubitLayer q = QubitLayer(testInput);
+    QubitLayer q = QubitLayer(3, testInput);
     // define array of control qubits for multiple control qubit gates
     int ctrlQubits[2]{0,1};
     TesterGate testerGate;
@@ -31,7 +31,7 @@ bool testGate(Gates gate){
     // define variable to store the result of the test
     bool testResult = true;
     // iterate over the states to check if the gates work
-    for (int i = 0; i < numStates; i++)
+    for (unsigned long long int i = 0; i < q.getNumStates(); i++)
         testResult = *(q.getQubitLayerOdd() + i) == testerGate.outputState[i] && testResult;
     std::cout << testerGate.gateName << (testResult ? " \033[32;32m[PASSED]\033[m" : " \033[31;31m[FAILED]\033[m") << std::endl;
     return testResult;
