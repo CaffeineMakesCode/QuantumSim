@@ -59,12 +59,6 @@ executables = $(TARGET) $(SINGLEQGATETIMES) $(TWOQGATETIMES) $(THREEQGATETIMES) 
 # debug directory
 DEBUG = main.dSYM
 
-# number of qubits
-NUMQUBITS = 2
-
-# flag to set number of qubits
-DFLAG = -DnumQubits
-
 # colours
 BLUE     = \033[34;34m
 CYAN     = \033[36;36m
@@ -92,17 +86,17 @@ $(TARGET): $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o
 
 $(TARGET).o: $(TARGET).cpp $(TARGET_DEPS) $(QLAYER_DEPS)
 	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                             				"
-	@$(CXX) $(DFLAG)=$(NUMQUBITS) $(CXXFLAGS) -c $(TARGET).cpp -o $(TARGET).o
+	@$(CXX) $(CXXFLAGS) -c $(TARGET).cpp -o $(TARGET).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 
 $(QUBITLAYER).o: $(QUBITLAYER).cpp $(TARGET_DEPS) $(QLAYER_DEPS)
 	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                       				"
-	@$(CXX) $(DFLAG)=$(NUMQUBITS) $(CXXFLAGS) -c $(QUBITLAYER).cpp -o $(QUBITLAYER).o
+	@$(CXX) $(CXXFLAGS) -c $(QUBITLAYER).cpp -o $(QUBITLAYER).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 
 $(EXAMPLES).o: $(EXAMPLES).cpp $(TARGET_DEPS) $(QLAYER_DEPS) $(EXAMPLES_DEPS)
 	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                      				"
-	@$(CXX) $(DFLAG)=$(NUMQUBITS) $(CXXFLAGS) -c $(EXAMPLES).cpp -o $(EXAMPLES).o
+	@$(CXX) $(CXXFLAGS) -c $(EXAMPLES).cpp -o $(EXAMPLES).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 
 benchmark: 
@@ -117,10 +111,8 @@ benchmark:
 	@printf "%b" "$(BLUE)=============================================$(NO_COLOR)\n"
 	@$(RM) $(executables)
 singleQBenchmark: $(SINGLEQGATETIMES)
-singleQBenchmark: NUMQUBITS = 1
 twoQBenchmark: $(TWOQGATETIMES)
 threeQBenchmark: $(THREEQGATETIMES)
-threeQBenchmark: NUMQUBITS = 3
 
 $(SINGLEQGATETIMES): $(SINGLEQGATETIMES).o $(QUBITLAYER).o
 	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(SINGLEQGATETIMES).o $(QUBITLAYER).o			"
@@ -151,17 +143,17 @@ $(THREEQGATETIMES): $(THREEQGATETIMES).o $(QUBITLAYER).o
 
 $(SINGLEQGATETIMES).o: $(SINGLEQGATETIMES).cpp $(TARGET_DEPS) $(QLAYER_DEPS) $(TIMERS)
 	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                          		"
-	@$(CXX) $(DFLAG)=$(NUMQUBITS) $(CXXFLAGS) -c $(SINGLEQGATETIMES).cpp -o $(SINGLEQGATETIMES).o
+	@$(CXX) $(CXXFLAGS) -c $(SINGLEQGATETIMES).cpp -o $(SINGLEQGATETIMES).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 
 $(TWOQGATETIMES).o: $(TWOQGATETIMES).cpp $(TARGET_DEPS) $(QLAYER_DEPS) $(TIMERS)
 	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                          			"
-	@$(CXX) $(DFLAG)=$(NUMQUBITS) $(CXXFLAGS) -c $(TWOQGATETIMES).cpp -o $(TWOQGATETIMES).o
+	@$(CXX) $(CXXFLAGS) -c $(TWOQGATETIMES).cpp -o $(TWOQGATETIMES).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 
 $(THREEQGATETIMES).o: $(THREEQGATETIMES).cpp $(TARGET_DEPS) $(QLAYER_DEPS) $(TIMERS)
 	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                          		"
-	@$(CXX) $(DFLAG)=$(NUMQUBITS) $(CXXFLAGS) -c $(THREEQGATETIMES).cpp -o $(THREEQGATETIMES).o
+	@$(CXX) $(CXXFLAGS) -c $(THREEQGATETIMES).cpp -o $(THREEQGATETIMES).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 
 eprBenchmark: $(EPR)
@@ -178,7 +170,7 @@ $(EPR): $(EPR).o $(QUBITLAYER).o
 
 $(EPR).o: $(BENCHMARKS)$(EPR).cpp $(TARGET_DEPS) $(QLAYER_DEPS) $(TIMERS)
 	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                          				"
-	@$(CXX) $(DFLAG)=$(NUMQUBITS) $(CXXFLAGS) -c $(EPR).cpp -o $(EPR).o
+	@$(CXX) $(CXXFLAGS) -c $(EPR).cpp -o $(EPR).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 
 cleanObj:
@@ -192,7 +184,6 @@ clean:
 	@printf "%b" "$(GREEN)$(OK_STRING)$(NO_COLOR)\n"
 
 # testing (first set number of qubits to 3)
-check: NUMQUBITS = 3
 check: $(TESTS)
 
 $(TESTS): $(TESTS).o $(QUBITLAYER).o
@@ -205,5 +196,5 @@ $(TESTS): $(TESTS).o $(QUBITLAYER).o
 
 $(TESTS).o: $(TESTS).cpp $(TARGET_DEPS) $(QLAYER_DEPS) $(TESTS_DEPS)
 	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                             				"
-	@$(CXX) $(CXXFLAGS) $(DFLAG)=$(NUMQUBITS) -c $(TESTS).cpp -o $(TESTS).o
+	@$(CXX) $(CXXFLAGS) -c $(TESTS).cpp -o $(TESTS).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
