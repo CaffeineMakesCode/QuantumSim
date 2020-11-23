@@ -19,16 +19,12 @@ class QubitLayer{
         void rx(int target, precision theta);
         void ry(int target, precision theta);
         void rz(int target, precision theta);
-        bool checkControls(int *controls, int numControls, std::bitset<maxQubits> state);
         void cnot(int control, int target);
         void toffoli(int control1, int control2, int target);
         void mcnot(int *controls, int numControls, int target);
         void cphase(int control, int target);
         void mcphase(int *controls, int numControls, int target);
-        bool checkZeroState(int qubit);
         qProb getMaxAmplitude();
-        void updateLayer();
-        void toggleParity();
         void printMeasurement();
         void printQubits();
         qubitLayer *getQubitLayerEven();
@@ -36,6 +32,10 @@ class QubitLayer{
         unsigned long long int getNumStates();
         unsigned int getNumQubits();
     private:
+        bool checkControls(int *controls, int numControls, std::bitset<maxQubits> state);
+        bool checkZeroState(int qubit);
+        void updateLayer();
+        void toggleParity();
         unsigned int numQubits;
         unsigned long long int numStates;
         qubitLayer *qEven_;
