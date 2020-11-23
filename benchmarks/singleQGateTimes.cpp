@@ -1,17 +1,14 @@
 #include <iostream>
 #include <complex>
 #include <string>
-#ifndef numQubits
-#define numQubits 1
-#endif
 #include "timers.hpp"
 #include "../src/QubitLayer.hpp"
 
 // list of single qubit gates
 enum Gates { init, X, Y, Z, Hadamard, rx, ry, rz };
 
-void runGate(Gates gate){
-    QubitLayer q;
+void runGate(unsigned int numQubits, Gates gate){
+    QubitLayer q(numQubits);
     std::string gateName;
     start = Clock::now();
     switch(gate){
@@ -31,8 +28,10 @@ void runGate(Gates gate){
 }
 
 int main(){
+    // define number of qubits (1) for this benchmark
+    unsigned int n = 1;
     std::cout << "\033[34;34m-------------Single Qubit Gates--------------\033[m" << std::endl;
-    std::cout <<"Number of qubits: "<< numQubits << std::endl;
+    std::cout <<"Number of qubits: "<< n << std::endl;
     for (int gate = init; gate <= rz; gate++)
-        runGate(static_cast<Gates>(gate));
+        runGate(n, static_cast<Gates>(gate));
 }
