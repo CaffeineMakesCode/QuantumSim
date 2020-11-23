@@ -1,8 +1,10 @@
 #include <iostream>
 #include "qAlgorithms.hpp"
 
-QubitLayer grover(int dSolution, int numReps){
-    if (dSolution > numStates){
+QubitLayer grover(unsigned int numQubits, int unsigned dSolution, int unsigned numReps){
+    QubitLayer q(numQubits);
+    unsigned long long int numStates = q.getNumStates();
+    if (dSolution > numQubits){
         std::cout<<"\033[31;31m[Error]\033[m"<<std::endl;
         std::cout<<"Number of states: "<<numStates<<std::endl;
         std::cout<<"Your solution:    "<<dSolution<<std::endl;
@@ -10,8 +12,7 @@ QubitLayer grover(int dSolution, int numReps){
     }
     if (numReps == 0)
         numReps = static_cast<int>(std::sqrt(numStates)/4*pi);
-    std::bitset<numQubits> bSolution = dSolution;
-    QubitLayer q;
+    std::bitset<maxQubits> bSolution = dSolution;
     int ctrlQubits[numQubits-1];
     for (int i = 0; i < (numQubits-1); i++)
         ctrlQubits[i] = i;
@@ -41,14 +42,14 @@ QubitLayer grover(int dSolution, int numReps){
     return q;
 }
 
-/*QubitLayer repCode3(int errorLocation, pauliError errorType){
+/*QubitLayer repCode3(unsigned int numQubits, unsigned int errorLocation, pauliError errorType){
+    QubitLayer q(numQubits);
     if (numQubits != 3){
         std::cout<<"\033[31;31m[Error]\033[m"<<std::endl;
         std::cout<<"Number of qubits defined:                            "<<numQubits<<std::endl;
         std::cout<<"Number of qubits used by 3 qubit repetition code:    "<<3<<std::endl;
         exit(EXIT_FAILURE);
     }
-    QubitLayer q;
     //initialise state to anything you want
     q.rx(0, pi/3);
     std::cout<<"Initial state:"<<std::endl;
@@ -70,14 +71,14 @@ QubitLayer grover(int dSolution, int numReps){
     return q;
 }
 
-QubitLayer genEPR(int q1, int q2){
+QubitLayer genEPR(unsigned int numQubits, unsigned int q1, unsigned int q2){
     if (numQubits < 2){
         std::cout<<"\033[31;31m[Error]\033[m"<<std::endl;
         std::cout<<"Number of qubits defined:           "<<numQubits<<std::endl;
         std::cout<<"Minimum number of qubits needed:    "<<2<<std::endl;
         exit(EXIT_FAILURE);
     }
-    QubitLayer q;
+    QubitLayer q(numQubits);
     //apply hadamard to the first qubit
     q.hadamard(q2);
     //apply cnot on the 2 qubits
