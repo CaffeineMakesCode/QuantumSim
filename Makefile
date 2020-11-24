@@ -11,6 +11,7 @@ CXXFLAGS = -g -Wall $(STANDARD)
 BENCHMARKS_DIR = benchmarks/
 SRC_DIR = src/
 TESTS_DIR = tests/
+EXAMPLES_DIR = examples/
 
 # the build target executable
 TARGET = $(SRC_DIR)main
@@ -21,13 +22,13 @@ TESTS = $(TESTS_DIR)tests
 # the dependencies
 TARGET_DEPS  	= $(SRC_DIR)definitions.hpp
 QLAYER_DEPS 	= $(SRC_DIR)QubitLayer.hpp
-EXAMPLES_DEPS 	= $(SRC_DIR)qAlgorithms.hpp
+EXAMPLES_DEPS 	= $(EXAMPLES_DIR)qAlgorithms.hpp
 TIMERS 			= $(BENCHMARKS_DIR)timers.hpp
 TESTS_DEPS 		= $(TESTS_DIR)tests.hpp
 
 # the other source files
 QUBITLAYER 			= $(SRC_DIR)QubitLayer
-EXAMPLES 			= $(SRC_DIR)qAlgorithms
+EXAMPLES 			= $(EXAMPLES_DIR)qAlgorithms
 SINGLEQGATETIMES 	= $(BENCHMARKS_DIR)singleQGateTimes
 TWOQGATETIMES 		= $(BENCHMARKS_DIR)twoQGateTimes
 THREEQGATETIMES 	= $(BENCHMARKS_DIR)threeQGateTimes
