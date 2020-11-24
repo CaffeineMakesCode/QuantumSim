@@ -1,6 +1,6 @@
 #ifndef QALGORITHMS_H
 #define QALGORITHMS_H
-#include "QubitLayer.hpp"
+#include "../src/QubitLayer.hpp"
 
 enum pauliError { errorX, errorY, errorZ };
 
