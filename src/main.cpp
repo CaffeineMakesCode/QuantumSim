@@ -2,9 +2,9 @@
 #include <complex>
 #include <chrono>
 #include "QubitLayer.hpp"
-#include "qAlgorithms.hpp"
-#include "rQXInterface.hpp"
 
+#include "rQXInterface.hpp"
+#include "../examples/qAlgorithms.hpp"
 int main(){
     // auto start = std::chrono::steady_clock::now();
     // QubitLayer q = grover(2, 0);

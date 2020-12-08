@@ -45,14 +45,36 @@ Running a quantum circuit is done by writing the circuit in `src/main.cpp`.
 int main(){
     // create a QubitLayer object
     QubitLayer q;
-    // apply the gates
+    // apply a hadamard gate
     q.hadamard(0);
-    //apply cnot on the 2 qubits
+    // apply cnot on the 2 qubits
     q.cnot(0, 1);
+    // print qubits
     q.printQubits();
 }
 ```
 This circuit creates an EPR pair.
+
+By default when a `QubitLayer` object is created, it is initialised with 2 qubits. To setup a larger quantum circuit, a `QubitLayer` object can be constructed using arguments.
+```cpp 
+#include <iostream>
+#include <complex>
+#include "QubitLayer.hpp"
+#include "qAlgorithms.hpp"
+
+int main(){
+    // create a QubitLayer object with 4 qubits
+    QubitLayer q(4);
+    // apply hadamard gates
+    q.hadamard(0);
+    q.hadamard(2);
+    // apply cnot gates
+    q.cnot(0, 1);
+    q.cnot(2, 3);
+    // print qubits
+    q.printQubits();
+}
+```
 ___
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
