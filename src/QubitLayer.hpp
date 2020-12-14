@@ -24,6 +24,9 @@ class QubitLayer{
         void mcnot(int *controls, int numControls, int target);
         void cphase(int control, int target);
         void mcphase(int *controls, int numControls, int target);
+        // void prepz(int *targets, int numTargets);
+        void measure(int target);
+        int random_number_gen(double threshold);
         qProb getMaxAmplitude();
         void printMeasurement();
         void printQubits();
@@ -44,3 +47,4 @@ class QubitLayer{
 };
 
 #endif
+

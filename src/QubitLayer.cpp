@@ -1,6 +1,7 @@
 #include <complex>
 #include <iostream>
 #include <cmath>
+#include <random>
 #include "QubitLayer.hpp"
 
 QubitLayer::QubitLayer(unsigned int numQubits, qubitLayer *qL){
@@ -12,11 +13,13 @@ QubitLayer::QubitLayer(unsigned int numQubits, qubitLayer *qL){
     qEven_ = new qubitLayer[numStates];
     qOdd_ = new qubitLayer[numStates];
     // if input is provided then use that to fill the input qubit state
-    if (!(qL == nullptr))
+    if (!(qL == nullptr)){
         for (int row = 0; row < numStates; row++)
             qEven_[row] = qL[row];
-    else
+    }
+    else{
         qEven_[0] = {1,0};
+        }
 }
 
 QubitLayer::~QubitLayer(){
@@ -210,6 +213,98 @@ void QubitLayer::mcphase(int *controls, int numControls, int target){
                 parity ? qOdd_[i] = qEven_[i] : qEven_[i] = qOdd_[i];
         }
     updateLayer();
+}
+
+// void QubitLayer::prepz(int* target, int numTargets){
+//     // Set probability of target bit being |0> to 1 and of being |1> to 0
+//     for (int i = 0; i < numTargets; i++)
+//     {
+//         parity ? qOdd_[target[i]] = -qEven_[i] : qEven_[target[i]] = -qOdd_[i];
+         
+//     }
+//     updateLayer();
+// }
+
+
+void QubitLayer::measure(int target){
+    // Calculate total probability of a bit being zero or one, when measured
+
+    // Generate random measurement result
+
+    // Set probability of all states with bit in other state to 0
+
+    // Add probability of all states with the bit in other state to the probability of the bit in the measurement sate
+
+    // |00> 0.3
+    // |01> 0.2
+    // |10> 0.4
+    // |11> 0.1
+    // measure 1st bit
+    // prob zero: 0.5
+    // prob one: 0.5
+    // -> set 1
+    // |10> 0.7
+    // |11> 0.3
+    std::cout << "Measure bit " << target << std::endl;
+    precision probZero{0};
+    precision probOne{0};
+    for (unsigned long long int i = 0; i < numStates; i++)
+    {
+        if (checkZeroState(i))
+        {
+            std::bitset<maxQubits> state = i;
+            if (state.test(target))
+            {
+                probOne += parity ? abs(qEven_[i]) * abs(qEven_[i]) : abs(qOdd_[i]) * abs(qOdd_[i]);
+            }
+            else
+            {
+                probZero += parity ? abs(qEven_[i]) * abs(qEven_[i]) : abs(qOdd_[i]) * abs(qOdd_[i]);
+            }
+        }
+    }
+    std::cout << "probOne: " << probOne << ", probZero: " << probZero << std::endl;
+    bool result = random_number_gen(probOne);
+    std::cout << "Measurement result of qubit " << target << " is " << result  << std::endl;
+
+    for (unsigned long long int i = 0; i < numStates; i++)
+    {
+        if (checkZeroState(i))
+        {
+            std::bitset<maxQubits> state = i;
+            // If state i contains the bit in the measured state, normalize the probability
+            if (state.test(target) == result)
+            {
+                state.flip(target); // Get the corresponding state where the measured bit has the opposite value
+                double probNormal = parity ? std::sqrt(abs(qEven_[i]) * abs(qEven_[i]) + abs(qEven_[state.to_ulong()]) * abs(qEven_[state.to_ulong()])) : \
+                    std::sqrt(abs(qOdd_[i]) * abs(qOdd_[i]) + abs(qOdd_[state.to_ulong()]) * abs(qOdd_[state.to_ulong()]));
+                // std::cout << "Total probability will be " << probNormal << std::endl;
+                // std::cout << "parity ? qEven_[i] : qOdd_[i] " << (parity ? qEven_[i] : qOdd_[i]) << std::endl;
+                parity ? qOdd_[i] = (qEven_[i])*probNormal/std::sqrt(abs(qEven_[i]) * abs(qEven_[i])) : qEven_[i] = (qOdd_[i])*probNormal/std::sqrt(abs(qOdd_[i]) * abs(qOdd_[i]));
+            
+                std::cout << "State " << state.flip(target) << " will have prob " << (parity ? abs(qOdd_[i]) * abs(qOdd_[i]) : abs(qEven_[i]) * abs(qEven_[i]) ) << std::endl;
+            }
+            // Else the probabilty of this state is zero
+            else
+            {
+                std::cout << "State " << state << " will have prob 0" << std::endl;
+                parity ? qOdd_[i] = 0 : qEven_[i] = 0;
+            }
+        }
+    }
+
+    updateLayer();
+}
+
+// Returns a 1 with the probability dof threshold
+int QubitLayer::random_number_gen(double threshold)
+{
+    std::random_device rd;
+    std::uniform_real_distribution<double> distribution(0.0f, 1.0f);
+    std::mt19937 engine(rd());
+    double value = distribution(engine);
+    std::cout << "[Random number generation] value: " << value << " threshold: " << threshold << std::endl;
+    return (value <  threshold) ? 1 : 0;
 }
 
 qProb QubitLayer::getMaxAmplitude(){
