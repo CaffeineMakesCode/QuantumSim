@@ -34,11 +34,19 @@ TWOQGATETIMES 		= $(BENCHMARKS_DIR)twoQGateTimes
 THREEQGATETIMES 	= $(BENCHMARKS_DIR)threeQGateTimes
 EPR 				= $(BENCHMARKS_DIR)epr
 
+# cQASM Interface $(LIBQASM_INCL:%=-I%)
+INTERFACE_DEPS 		= $(SRC_DIR)qInterface.hpp
+RQXINTERFACE_DEPS	= $(SRC_DIR)rQXInterface.hpp
+INTERFACE	 		= $(SRC_DIR)qInterface
+RQXINTERFACE 		= $(SRC_DIR)rQXInterface
+LIBQASM_INCL = deps/libqasm/src/cqasm/include deps/libqasm/src/cqasm/tree-gen/include deps/libqasm/pybuild/cbuild/src/cqasm/include deps/libqasm/pybuild/cbuild/src/cqasm/tree-gen deps/libqasm/pybuild/cbuild/src/cqasm/func-gen 
+
+
 # list of object files
-objectFiles = $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o $(SINGLEQGATETIMES).o $(TWOQGATETIMES).o $(THREEQGATETIMES).o $(EPR).o $(TESTS).o
+objectFiles = $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o $(SINGLEQGATETIMES).o $(TWOQGATETIMES).o $(THREEQGATETIMES).o $(EPR).o $(TESTS).o $(RQXINTERFACE).o
 
 #list of executables
-executables = $(TARGET) $(SINGLEQGATETIMES) $(TWOQGATETIMES) $(THREEQGATETIMES) $(EPR) $(TESTS)
+executables = $(TARGET) $(SINGLEQGATETIMES) $(TWOQGATETIMES) $(THREEQGATETIMES) $(EPR) $(TESTS) 
 
 # debug directory
 DEBUG = main.dSYM
@@ -62,13 +70,13 @@ BENCHMARKS_STRING = "Running\ benchmarks..."
 
 all: $(TARGET)
 
-$(TARGET): $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o
-	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o  			"
-	@$(CXX) $(CXXFLAGS) -o $(TARGET) $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o
+$(TARGET): $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o $(INTERFACE).o $(RQXINTERFACE).o deps/libqasm/lib/libcqasm.so deps/libqasm/lib/libtree-lib.so
+	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o $(RQXINTERFACE).o \n"
+	@$(CXX) $(CXXFLAGS) -o $(TARGET) $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o $(RQXINTERFACE).o $(INTERFACE).o deps/libqasm/lib/libcqasm.so deps/libqasm/lib/libtree-lib.so
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 	@printf "%b" "$(GREEN)$(SUCCESS_STRING)$(NO_COLOR)\n";
 
-$(TARGET).o: $(TARGET).cpp $(TARGET_DEPS) $(QLAYER_DEPS)
+$(TARGET).o: $(TARGET).cpp $(TARGET_DEPS) $(QLAYER_DEPS) $(RQXINTERFACE_DEPS) $(INTERFACE_DEPS)
 	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                             				"
 	@$(CXX) $(CXXFLAGS) -c $(TARGET).cpp -o $(TARGET).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
@@ -81,6 +89,16 @@ $(QUBITLAYER).o: $(QUBITLAYER).cpp $(TARGET_DEPS) $(QLAYER_DEPS)
 $(EXAMPLES).o: $(EXAMPLES).cpp $(TARGET_DEPS) $(QLAYER_DEPS) $(EXAMPLES_DEPS)
 	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                      				"
 	@$(CXX) $(CXXFLAGS) -c $(EXAMPLES).cpp -o $(EXAMPLES).o
+	@printf "%b" "$(GREEN)$(OK_STRING)\n"
+
+$(INTERFACE).o: $(INTERFACE).cpp $(TARGET_DEPS) $(QLAYER_DEPS) $(RQXINTERFACE_DEPS) $(INTERFACE_DEPS)
+	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                       				"
+	@$(CXX) $(CXXFLAGS) -o $(INTERFACE).o  -c $(INTERFACE).cpp 
+	@printf "%b" "$(GREEN)$(OK_STRING)\n"
+
+$(RQXINTERFACE).o: $(RQXINTERFACE).cpp $(TARGET_DEPS) $(QLAYER_DEPS) $(RQXINTERFACE_DEPS) $(INTERFACE_DEPS)
+	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                       				"
+	@$(CXX) $(CXXFLAGS) -lcqasm -o $(RQXINTERFACE).o -c $(RQXINTERFACE).cpp 
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 
 benchmark: 
