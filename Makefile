@@ -2,11 +2,11 @@
 OS_NAME := $(shell uname -s | tr A-Z a-z)
 
 # get libomp version
-OPEN_MP_VERSION := $(shell which libomp)
+OPEN_MP_LOCATION := $(shell whereis libomp)
 
 # set linker flag for OpenMP based on OS
 ifeq ($(OS_NAME), darwin)
-	ifneq ($(OPEN_MP_VERSION),)
+	ifneq ($(OPEN_MP_LOCATION),)
 		OPENMP_LINKER_FLAG = -lomp
 		OPENMP_FLAGS = -Xpreprocessor -fopenmp
 		PROG_PARALLEL_FLAG = -p
@@ -202,6 +202,7 @@ $(TESTS): $(TESTS).o $(QUBITLAYER).o
 	@printf "%b" "$(GREEN)$(SUCCESS_STRING) $(TESTS_STRING)$(NO_COLOR)\n";
 	@./$(TESTS) $(PROG_PARALLEL_FLAG)
 	@$(RM) $(executables) $(objectFiles)
+	@printf "%b" "$(OPEN_MP_VERSION)"
 
 $(TESTS).o: $(TESTS).cpp $(TARGET_DEPS) $(QLAYER_DEPS) $(TESTS_DEPS)
 	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                             				"
