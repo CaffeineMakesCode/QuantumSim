@@ -1,8 +1,11 @@
 # get the name of the OS
 OS_NAME := $(shell uname -s | tr A-Z a-z)
 
+# compiler being used
+CXX = g++
+
 # get libomp version
-OPEN_MP_LOCATION := $(shell whereis libomp)
+OPEN_MP_LOCATION := $(@shell $(CXX) -lomp)
 
 # set linker flag for OpenMP based on OS
 ifeq ($(OS_NAME), darwin)
@@ -16,9 +19,6 @@ ifeq ($(OS_NAME), linux)
     OPENMP_LINKER_FLAG = -lgomp
 	PROG_PARALLEL_FLAG = -p
 endif
-
-# compiler being used
-CXX = g++
 
 # compiler flags:
 #  -g    adds debugging information to the executable file
