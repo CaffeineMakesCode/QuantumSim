@@ -129,7 +129,15 @@ void QubitLayer::rx(int target, precision theta)
 #pragma omp parallel for shared(qOdd_, qEven_)
     for (unsigned long long int i = 0; i < numStates; i++)
         if (checkZeroState(i))
+        {
             parity ? qOdd_[i] += cosTheta * qEven_[i] : qEven_[i] += cosTheta * qOdd_[i];
+            if (!isParallel)
+            {
+                std::bitset<maxQubits> state = i;
+                state.flip(target);
+                parity ? qOdd_[state.to_ulong()] += -complexImg * sinTheta * qEven_[i] : qEven_[state.to_ulong()] += -complexImg * sinTheta * qOdd_[i];
+            }
+        }
     if (isParallel)
     {
 #pragma omp barrier
