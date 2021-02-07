@@ -28,3 +28,13 @@ jobs:
         run: make check
       - name: make
         run: make
+
+  build-macos-no-openmp:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: make check
+        run: make check
+      - name: make
+        run: make
