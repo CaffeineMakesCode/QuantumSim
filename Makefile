@@ -203,7 +203,7 @@ $(TESTS): $(TESTS).o $(QUBITLAYER).o
 	@$(CXX) $(CXXFLAGS) $(OMPLINKERFLAG) -o $(TESTS) $(TESTS).o $(QUBITLAYER).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 	@printf "%b" "$(GREEN)$(SUCCESS_STRING) $(TESTS_STRING)$(NO_COLOR)\n";
-	@./$(TESTS)	
+	@./$(TESTS)
 	@$(RM) $(executables) $(objectFiles)
 
 $(TESTS).o: $(TESTS).cpp $(TARGET_DEPS) $(QLAYER_DEPS) $(TESTS_DEPS)

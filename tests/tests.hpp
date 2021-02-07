@@ -5,7 +5,8 @@
 
 constexpr int numStatesTest{8};
 
-struct TesterGate{
+struct TesterGate
+{
     std::string gateName;
     qubitLayer outputState[numStatesTest];
 };
@@ -32,8 +33,8 @@ TesterGate hadamardTester = {
 };
 
 // rotation gates tested with theta=pi
-precision cosPi = cos(pi/2);
-precision sinPi = sin(pi/2);
+precision cosPi = cos(pi / 2);
+precision sinPi = sin(pi / 2);
 TesterGate rxTester = {
     .gateName = "Rx      ",
     .outputState = {zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, {0, -sinPi}, {cosPi, 0}},
