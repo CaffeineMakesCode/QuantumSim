@@ -18,3 +18,6 @@ figs/
 
 # transfer script
 transfer
+
+# object files
+*.o
