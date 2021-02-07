@@ -6,7 +6,7 @@ CXX = g++
 
 # set linker flag for OpenMP based on OS
 ifeq ($(OS_NAME), darwin)
-OPENMP_LINKER_FLAG = -lompd
+OPENMP_LINKER_FLAG = -lomp
 OPENMP_FLAGS = -Xpreprocessor -fopenmp
 endif
 ifeq ($(OS_NAME), linux)
