@@ -1,30 +1,33 @@
 #include <iostream>
 #include "qAlgorithms.hpp"
 
-QubitLayer grover(unsigned int numQubits, int unsigned dSolution, int unsigned numReps){
+QubitLayer grover(unsigned int numQubits, int unsigned dSolution, int unsigned numReps)
+{
     QubitLayer q(numQubits);
     unsigned long long int numStates = q.getNumStates();
-    if (dSolution > numQubits){
-        std::cout<<"\033[31;31m[Error]\033[m"<<std::endl;
-        std::cout<<"Number of states: "<<numStates<<std::endl;
-        std::cout<<"Your solution:    "<<dSolution<<std::endl;
+    if (dSolution > numQubits)
+    {
+        std::cout << "\033[31;31m[Error]\033[m" << std::endl;
+        std::cout << "Number of states: " << numStates << std::endl;
+        std::cout << "Your solution:    " << dSolution << std::endl;
         exit(EXIT_FAILURE);
     }
     if (numReps == 0)
-        numReps = static_cast<int>(std::sqrt(numStates)/4*pi);
+        numReps = static_cast<int>(std::sqrt(numStates) / 4 * pi);
     std::bitset<maxQubits> bSolution = dSolution;
-    int ctrlQubits[numQubits-1];
-    for (int i = 0; i < (numQubits-1); i++)
+    int ctrlQubits[numQubits - 1];
+    for (int i = 0; i < (numQubits - 1); i++)
         ctrlQubits[i] = i;
     //initiliase qubits to a superposition of all states
     for (int i = 0; i < numQubits; i++)
         q.hadamard(i);
-    for (int rep = 0; rep < numReps; rep++){
+    for (int rep = 0; rep < numReps; rep++)
+    {
         //oracle to tag solution
         for (int i = 0; i < numQubits; i++)
             if (!bSolution.test(i))
                 q.pauliX(i);
-        q.mcphase(ctrlQubits, numQubits-1, numQubits-1);
+        q.mcphase(ctrlQubits, numQubits - 1, numQubits - 1);
         for (int i = 0; i < numQubits; i++)
             if (!bSolution.test(i))
                 q.pauliX(i);
@@ -33,7 +36,7 @@ QubitLayer grover(unsigned int numQubits, int unsigned dSolution, int unsigned n
             q.hadamard(i);
         for (int i = 0; i < numQubits; i++)
             q.pauliX(i);
-        q.mcphase(ctrlQubits, numQubits-1, numQubits-1);
+        q.mcphase(ctrlQubits, numQubits - 1, numQubits - 1);
         for (int i = 0; i < numQubits; i++)
             q.pauliX(i);
         for (int i = 0; i < numQubits; i++)
@@ -42,7 +45,7 @@ QubitLayer grover(unsigned int numQubits, int unsigned dSolution, int unsigned n
     return q;
 }
 
-QubitLayer repCode3(unsigned int numQubits, unsigned int errorLocation, pauliError errorType){
+/*QubitLayer repCode3(unsigned int numQubits, unsigned int errorLocation, pauliError errorType){
     QubitLayer q(numQubits);
     if (numQubits != 3){
         std::cout<<"\033[31;31m[Error]\033[m"<<std::endl;
@@ -84,4 +87,4 @@ QubitLayer genEPR(unsigned int numQubits, unsigned int q1, unsigned int q2){
     //apply cnot on the 2 qubits
     q.cnot(q2, q1);
     return q;
-}
+}*/

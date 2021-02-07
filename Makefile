@@ -1,11 +1,34 @@
+# get the name of the OS
+OS_NAME := $(shell uname -s | tr A-Z a-z)
+
+# get libomp version
+OPEN_MP_VERSION := $(shell which libomp)
+
 #compiler being used
 CXX = g++
+
+# set linker flag for OpenMP based on OS
+ifeq ($(OS_NAME), darwin)
+ifneq ($(OPEN_MP_VERSION),)
+	OMPLINKERFLAG = -lomp
+endif
+endif
+ifeq ($(OS_NAME), linux)
+    OMPLINKERFLAG = -lgomp
+endif
+# add flag to OPENMPFLAGS if OS is MacOS
+ifeq ($(OS_NAME), darwin)
+ifneq ($(OPEN_MP_VERSION),)
+    OPENMPFLAGS = -Xpreprocessor -fopenmp
+endif
+endif
 
 # compiler flags:
 #  -g    adds debugging information to the executable file
 #  -Wall turns on most, but not all, compiler warnings
 STANDARD = -std=c++17
-CXXFLAGS = -g -Wall $(STANDARD)
+CXXFLAGS = -g -Wall $(STANDARD) $(OPENMPFLAGS)
+
 
 # project directories
 BENCHMARKS_DIR = benchmarks/
@@ -54,17 +77,22 @@ NO_COLOR = \033[m
 
 # info strings
 SUCCESS_STRING    = "Compiled\ successfully!"
+WARNING_STRING	  = "Warning:\ "
 COM_STRING	      = "Compiling"
 LINK_STRING	      = "Linking"
 OK_STRING	      = "OK"
 TESTS_STRING      = "Running\ tests..."
 BENCHMARKS_STRING = "Running\ benchmarks..."
+OPENMP_NOT_FOUND  = "OpenMP\ not\ found.\ Making\ QuantumSim\ without\ it"
 
 all: $(TARGET)
 
 $(TARGET): $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o
+	@if ["" == $(OPEN_MP_VERSION)] ; \
+	then printf "%b" "$(YELLOW)$(WARNING_STRING)$(NO_COLOR)$(OPENMP_NOT_FOUND)\n" ; \
+	fi;
 	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o  			"
-	@$(CXX) $(CXXFLAGS) -o $(TARGET) $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o
+	@$(CXX) $(CXXFLAGS) $(OMPLINKERFLAG) -o $(TARGET) $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 	@printf "%b" "$(GREEN)$(SUCCESS_STRING)$(NO_COLOR)\n";
 
@@ -100,7 +128,7 @@ threeQBenchmark: $(THREEQGATETIMES)
 
 $(SINGLEQGATETIMES): $(SINGLEQGATETIMES).o $(QUBITLAYER).o
 	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(SINGLEQGATETIMES).o $(QUBITLAYER).o			"
-	@$(CXX) $(CXXFLAGS) -o $(SINGLEQGATETIMES) $(SINGLEQGATETIMES).o $(QUBITLAYER).o
+	@$(CXX) $(CXXFLAGS) $(OMPLINKERFLAG) -o $(SINGLEQGATETIMES) $(SINGLEQGATETIMES).o $(QUBITLAYER).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 	@if [ -a $(SINGLEQGATETIMES) ] ; \
 	then printf "%b" "$(GREEN)$(SUCCESS_STRING)$(NO_COLOR)\n"; \
@@ -109,7 +137,7 @@ $(SINGLEQGATETIMES): $(SINGLEQGATETIMES).o $(QUBITLAYER).o
 
 $(TWOQGATETIMES): $(TWOQGATETIMES).o $(QUBITLAYER).o
 	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(TWOQGATETIMES).o $(QUBITLAYER).o 				"
-	@$(CXX) $(CXXFLAGS) -o $(TWOQGATETIMES) $(TWOQGATETIMES).o $(QUBITLAYER).o
+	@$(CXX) $(CXXFLAGS) $(OMPLINKERFLAG) -o $(TWOQGATETIMES) $(TWOQGATETIMES).o $(QUBITLAYER).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 	@if [ -a $(TWOQGATETIMES) ] ; \
 	then printf "%b" "$(GREEN)$(SUCCESS_STRING)$(NO_COLOR)\n"; \
@@ -118,7 +146,7 @@ $(TWOQGATETIMES): $(TWOQGATETIMES).o $(QUBITLAYER).o
 
 $(THREEQGATETIMES): $(THREEQGATETIMES).o $(QUBITLAYER).o
 	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(THREEQGATETIMES).o $(QUBITLAYER).o 			"
-	@$(CXX) $(CXXFLAGS) -o $(THREEQGATETIMES) $(THREEQGATETIMES).o $(QUBITLAYER).o
+	@$(CXX) $(CXXFLAGS) $(OMPLINKERFLAG) -o $(THREEQGATETIMES) $(THREEQGATETIMES).o $(QUBITLAYER).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 	@if [ -a $(THREEQGATETIMES) ] ; \
 	then printf "%b" "$(GREEN)$(SUCCESS_STRING)$(NO_COLOR)\n"; \
@@ -144,7 +172,7 @@ eprBenchmark: $(EPR)
 
 $(EPR): $(EPR).o $(QUBITLAYER).o
 	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(EPR).o $(QUBITLAYER).o					"
-	@$(CXX) $(CXXFLAGS) -o $(EPR) $(EPR).o $(QUBITLAYER).o
+	@$(CXX) $(CXXFLAGS) $(OMPLINKERFLAG) -o $(EPR) $(EPR).o $(QUBITLAYER).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 	@if [ -a $(EPR) ] ; \
 	then printf "%b" "$(GREEN)$(SUCCESS_STRING)$(NO_COLOR)\n"; \
@@ -167,12 +195,12 @@ clean:
 	@$(RM) $(executables) $(objectFiles)
 	@printf "%b" "$(GREEN)$(OK_STRING)$(NO_COLOR)\n"
 
-# testing (first set number of qubits to 3)
+# testing
 check: $(TESTS)
 
 $(TESTS): $(TESTS).o $(QUBITLAYER).o
 	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(TESTS).o $(QUBITLAYER).o					"
-	@$(CXX) $(CXXFLAGS) -o $(TESTS) $(TESTS).o $(QUBITLAYER).o
+	@$(CXX) $(CXXFLAGS) $(OMPLINKERFLAG) -o $(TESTS) $(TESTS).o $(QUBITLAYER).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 	@printf "%b" "$(GREEN)$(SUCCESS_STRING) $(TESTS_STRING)$(NO_COLOR)\n";
 	@./$(TESTS)	
