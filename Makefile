@@ -5,7 +5,7 @@ OS_NAME := $(shell uname -s | tr A-Z a-z)
 CXX = g++
 
 # get libomp version
-OPEN_MP_LOCATION := $(shell command -v libomp)
+OPEN_MP_LOCATION := $(shell $(CXX) -lomp)
 
 # set linker flag for OpenMP based on OS
 ifeq ($(OS_NAME), darwin)
