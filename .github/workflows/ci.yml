@@ -24,6 +24,8 @@ jobs:
       - uses: actions/checkout@v2
       - name: install libomp
         run: brew install libomp
+      - name: print OpenMP version
+        run: which libomp
       - name: make check
         run: make check
       - name: make
