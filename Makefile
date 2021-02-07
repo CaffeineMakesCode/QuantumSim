@@ -6,7 +6,7 @@ CXX = g++
 
 # set linker flag for OpenMP based on OS
 ifeq ($(OS_NAME), darwin)
-OPENMP_LINKER_FLAG = -lomp
+OPENMP_LINKER_FLAG = -lompd
 OPENMP_FLAGS = -Xpreprocessor -fopenmp
 endif
 ifeq ($(OS_NAME), linux)
@@ -195,15 +195,17 @@ clean:
 check: $(TESTS)
 
 $(TESTS): $(TESTS).o $(QUBITLAYER).o
-	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(TESTS).o $(QUBITLAYER).o					"
 	@if $(CXX) $(CXXFLAGS) $(OPENMP_LINKER_FLAG) -o $(TESTS) $(TESTS).o $(QUBITLAYER).o; then \
+		printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(TESTS).o $(QUBITLAYER).o					"; \
 		$(CXX) $(CXXFLAGS) $(OPENMP_LINKER_FLAG) -o $(TESTS) $(TESTS).o $(QUBITLAYER).o; \
 		printf "%b" "$(GREEN)$(OK_STRING)\n"; \
 		printf "%b" "$(GREEN)$(SUCCESS_STRING) $(TESTS_STRING)$(NO_COLOR)\n"; \
 		./$(TESTS) $(PROG_PARALLEL_FLAG); \
 	else \
 		printf "%b" "$(YELLOW)$(WARNING_STRING)$(NO_COLOR) $(OPENMP_NOT_FOUND)\n" ; \
+		printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(TESTS).o $(QUBITLAYER).o					"; \
 		$(CXX) $(CXXFLAGS) -o $(TESTS) $(TESTS).o $(QUBITLAYER).o; \
+		printf "%b" "$(GREEN)$(OK_STRING)\n"; \
 		printf "%b" "$(GREEN)$(SUCCESS_STRING) $(TESTS_STRING)$(NO_COLOR)\n"; \
 		./$(TESTS); \
 	fi;
