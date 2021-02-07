@@ -15,7 +15,7 @@ QubitLayer::QubitLayer(unsigned int numQubits, qubitLayer *qL)
     qOdd_ = new qubitLayer[numStates];
     // if input is provided then use that to fill the input qubit state
     if (!(qL == nullptr))
-        for (int row = 0; row < numStates; row++)
+        for (unsigned int row = 0; row < numStates; row++)
             qEven_[row] = qL[row];
     else
         qEven_[0] = {1, 0};
