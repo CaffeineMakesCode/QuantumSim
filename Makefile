@@ -9,18 +9,15 @@ CXX = g++
 
 # set linker flag for OpenMP based on OS
 ifeq ($(OS_NAME), darwin)
-ifneq ($(OPEN_MP_VERSION),)
-	OMPLINKERFLAG = -lomp
-endif
+	ifneq ($(OPEN_MP_VERSION),)
+		OMPLINKERFLAG = -lomp
+		OPENMPFLAGS = -Xpreprocessor -fopenmp
+		PROG_PARALLEL_FLAG = -p
+	endif
 endif
 ifeq ($(OS_NAME), linux)
     OMPLINKERFLAG = -lgomp
-endif
-# add flag to OPENMPFLAGS if OS is MacOS
-ifeq ($(OS_NAME), darwin)
-ifneq ($(OPEN_MP_VERSION),)
-    OPENMPFLAGS = -Xpreprocessor -fopenmp
-endif
+	PROG_PARALLEL_FLAG = -p
 endif
 
 # compiler flags:
@@ -89,7 +86,7 @@ all: $(TARGET)
 
 $(TARGET): $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o
 	@if ["" == $(OPEN_MP_VERSION)] ; \
-	then printf "%b" "$(YELLOW)$(WARNING_STRING)$(NO_COLOR)$(OPENMP_NOT_FOUND)\n" ; \
+	then printf "%b" "$(YELLOW)$(WARNING_STRING)$(NO_COLOR) $(OPENMP_NOT_FOUND)\n" ; \
 	fi;
 	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o  			"
 	@$(CXX) $(CXXFLAGS) $(OMPLINKERFLAG) -o $(TARGET) $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o
@@ -203,7 +200,7 @@ $(TESTS): $(TESTS).o $(QUBITLAYER).o
 	@$(CXX) $(CXXFLAGS) $(OMPLINKERFLAG) -o $(TESTS) $(TESTS).o $(QUBITLAYER).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 	@printf "%b" "$(GREEN)$(SUCCESS_STRING) $(TESTS_STRING)$(NO_COLOR)\n";
-	@./$(TESTS)
+	@./$(TESTS) $(PROG_PARALLEL_FLAG)
 	@$(RM) $(executables) $(objectFiles)
 
 $(TESTS).o: $(TESTS).cpp $(TARGET_DEPS) $(QLAYER_DEPS) $(TESTS_DEPS)
