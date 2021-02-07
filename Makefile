@@ -4,28 +4,24 @@ OS_NAME := $(shell uname -s | tr A-Z a-z)
 # compiler being used
 CXX = g++
 
-# get libomp version
-OPEN_MP_LOCATION := $(shell $(CXX) -lomp)
-
 # set linker flag for OpenMP based on OS
 ifeq ($(OS_NAME), darwin)
-	ifneq ($(OPEN_MP_LOCATION),)
-		OPENMP_LINKER_FLAG = -lomp
-		OPENMP_FLAGS = -Xpreprocessor -fopenmp
-		PROG_PARALLEL_FLAG = -p
-	endif
+OPENMP_LINKER_FLAG = -lomp
+OPENMP_FLAGS = -Xpreprocessor -fopenmp
 endif
 ifeq ($(OS_NAME), linux)
-    OPENMP_LINKER_FLAG = -lgomp
-	PROG_PARALLEL_FLAG = -p
+OPENMP_LINKER_FLAG = -lgomp
+OPENMP_FLAGS = -fopenmp
 endif
 
 # compiler flags:
 #  -g    adds debugging information to the executable file
 #  -Wall turns on most, but not all, compiler warnings
 STANDARD = -std=c++17
-CXXFLAGS = -g -Wall $(STANDARD) $(OPENMP_FLAGS)
+CXXFLAGS = -g -Wall $(STANDARD)
 
+# parallel flag for program
+PROG_PARALLEL_FLAG = -p
 
 # project directories
 BENCHMARKS_DIR = benchmarks/
@@ -85,28 +81,31 @@ OPENMP_NOT_FOUND  = "OpenMP\ not\ found.\ Making\ QuantumSim\ without\ it"
 all: $(TARGET)
 
 $(TARGET): $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o
-	@if ["" == $(OPEN_MP_VERSION)] ; \
-	then printf "%b" "$(YELLOW)$(WARNING_STRING)$(NO_COLOR) $(OPENMP_NOT_FOUND)\n" ; \
+	@if $(CXX) $(CXXFLAGS) $(OPENMP_LINKER_FLAG) -o $(TARGET) $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o; then \
+		printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o  			"; \
+		$(CXX) $(CXXFLAGS) $(OPENMP_LINKER_FLAG) -o $(TARGET) $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o; \
+	else \
+		printf "%b" "$(YELLOW)$(WARNING_STRING)$(NO_COLOR) $(OPENMP_NOT_FOUND)\n" ; \
+		printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o  			"; \
+		$(CXX) $(CXXFLAGS) -o $(TARGET) $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o; \
 	fi;
-	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o  			"
-	@$(CXX) $(CXXFLAGS) $(OPENMP_LINKER_FLAG) -o $(TARGET) $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 	@printf "%b" "$(GREEN)$(SUCCESS_STRING)$(NO_COLOR)\n";
 
 $(TARGET).o: $(TARGET).cpp $(TARGET_DEPS) $(QLAYER_DEPS)
 	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                             				"
 	@$(CXX) $(CXXFLAGS) -c $(TARGET).cpp -o $(TARGET).o
-	@printf "%b" "$(GREEN)$(OK_STRING)\n"
+	@printf "%b" "$(GREEN)$(OK_STRING)$(NO_COLOR)\n"
 
 $(QUBITLAYER).o: $(QUBITLAYER).cpp $(TARGET_DEPS) $(QLAYER_DEPS)
 	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                       				"
 	@$(CXX) $(CXXFLAGS) -c $(QUBITLAYER).cpp -o $(QUBITLAYER).o
-	@printf "%b" "$(GREEN)$(OK_STRING)\n"
+	@printf "%b" "$(GREEN)$(OK_STRING)$(NO_COLOR)\n"
 
 $(EXAMPLES).o: $(EXAMPLES).cpp $(TARGET_DEPS) $(QLAYER_DEPS) $(EXAMPLES_DEPS)
 	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                      				"
 	@$(CXX) $(CXXFLAGS) -c $(EXAMPLES).cpp -o $(EXAMPLES).o
-	@printf "%b" "$(GREEN)$(OK_STRING)\n"
+	@printf "%b" "$(GREEN)$(OK_STRING)$(NO_COLOR)\n"
 
 benchmark: 
 	@make singleQBenchmark 
@@ -172,7 +171,7 @@ $(EPR): $(EPR).o $(QUBITLAYER).o
 	@$(CXX) $(CXXFLAGS) $(OPENMP_LINKER_FLAG) -o $(EPR) $(EPR).o $(QUBITLAYER).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 	@if [ -a $(EPR) ] ; \
-	then printf "%b" "$(GREEN)$(SUCCESS_STRING)$(NO_COLOR)\n"; \
+		then printf "%b" "$(GREEN)$(SUCCESS_STRING)$(NO_COLOR)\n"; \
 	fi;
 	@./$(EPR)
 	@$(RM) $(executables) $(objectFiles)
@@ -197,14 +196,20 @@ check: $(TESTS)
 
 $(TESTS): $(TESTS).o $(QUBITLAYER).o
 	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(TESTS).o $(QUBITLAYER).o					"
-	@$(CXX) $(CXXFLAGS) $(OPENMP_LINKER_FLAG) -o $(TESTS) $(TESTS).o $(QUBITLAYER).o
-	@printf "%b" "$(GREEN)$(OK_STRING)\n"
-	@printf "%b" "$(GREEN)$(SUCCESS_STRING) $(TESTS_STRING)$(NO_COLOR)\n";
-	@./$(TESTS) $(PROG_PARALLEL_FLAG)
+	@if $(CXX) $(CXXFLAGS) $(OPENMP_LINKER_FLAG) -o $(TESTS) $(TESTS).o $(QUBITLAYER).o; then \
+		$(CXX) $(CXXFLAGS) $(OPENMP_LINKER_FLAG) -o $(TESTS) $(TESTS).o $(QUBITLAYER).o; \
+		printf "%b" "$(GREEN)$(OK_STRING)\n"; \
+		printf "%b" "$(GREEN)$(SUCCESS_STRING) $(TESTS_STRING)$(NO_COLOR)\n"; \
+		./$(TESTS) $(PROG_PARALLEL_FLAG); \
+	else \
+		printf "%b" "$(YELLOW)$(WARNING_STRING)$(NO_COLOR) $(OPENMP_NOT_FOUND)\n" ; \
+		$(CXX) $(CXXFLAGS) -o $(TESTS) $(TESTS).o $(QUBITLAYER).o; \
+		printf "%b" "$(GREEN)$(SUCCESS_STRING) $(TESTS_STRING)$(NO_COLOR)\n"; \
+		./$(TESTS); \
+	fi;
 	@$(RM) $(executables) $(objectFiles)
-	@printf "%b" "$(OPEN_MP_VERSION)"
 
 $(TESTS).o: $(TESTS).cpp $(TARGET_DEPS) $(QLAYER_DEPS) $(TESTS_DEPS)
 	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                             				"
-	@$(CXX) $(CXXFLAGS) -c $(TESTS).cpp -o $(TESTS).o
+	@$(CXX) $(CXXFLAGS) $(OPENMP_FLAGS) -c $(TESTS).cpp -o $(TESTS).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
