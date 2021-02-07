@@ -4,27 +4,27 @@ OS_NAME := $(shell uname -s | tr A-Z a-z)
 # get libomp version
 OPEN_MP_VERSION := $(shell which libomp)
 
-#compiler being used
-CXX = g++
-
 # set linker flag for OpenMP based on OS
 ifeq ($(OS_NAME), darwin)
 	ifneq ($(OPEN_MP_VERSION),)
-		OMPLINKERFLAG = -lomp
-		OPENMPFLAGS = -Xpreprocessor -fopenmp
+		OPENMP_LINKER_FLAG = -lomp
+		OPENMP_FLAGS = -Xpreprocessor -fopenmp
 		PROG_PARALLEL_FLAG = -p
 	endif
 endif
 ifeq ($(OS_NAME), linux)
-    OMPLINKERFLAG = -lgomp
+    OPENMP_LINKER_FLAG = -lgomp
 	PROG_PARALLEL_FLAG = -p
 endif
+
+# compiler being used
+CXX = g++
 
 # compiler flags:
 #  -g    adds debugging information to the executable file
 #  -Wall turns on most, but not all, compiler warnings
 STANDARD = -std=c++17
-CXXFLAGS = -g -Wall $(STANDARD) $(OPENMPFLAGS)
+CXXFLAGS = -g -Wall $(STANDARD) $(OPENMP_FLAGS)
 
 
 # project directories
@@ -89,7 +89,7 @@ $(TARGET): $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o
 	then printf "%b" "$(YELLOW)$(WARNING_STRING)$(NO_COLOR) $(OPENMP_NOT_FOUND)\n" ; \
 	fi;
 	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o  			"
-	@$(CXX) $(CXXFLAGS) $(OMPLINKERFLAG) -o $(TARGET) $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o
+	@$(CXX) $(CXXFLAGS) $(OPENMP_LINKER_FLAG) -o $(TARGET) $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 	@printf "%b" "$(GREEN)$(SUCCESS_STRING)$(NO_COLOR)\n";
 
@@ -125,7 +125,7 @@ threeQBenchmark: $(THREEQGATETIMES)
 
 $(SINGLEQGATETIMES): $(SINGLEQGATETIMES).o $(QUBITLAYER).o
 	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(SINGLEQGATETIMES).o $(QUBITLAYER).o			"
-	@$(CXX) $(CXXFLAGS) $(OMPLINKERFLAG) -o $(SINGLEQGATETIMES) $(SINGLEQGATETIMES).o $(QUBITLAYER).o
+	@$(CXX) $(CXXFLAGS) $(OPENMP_LINKER_FLAG) -o $(SINGLEQGATETIMES) $(SINGLEQGATETIMES).o $(QUBITLAYER).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 	@if [ -a $(SINGLEQGATETIMES) ] ; \
 	then printf "%b" "$(GREEN)$(SUCCESS_STRING)$(NO_COLOR)\n"; \
@@ -134,7 +134,7 @@ $(SINGLEQGATETIMES): $(SINGLEQGATETIMES).o $(QUBITLAYER).o
 
 $(TWOQGATETIMES): $(TWOQGATETIMES).o $(QUBITLAYER).o
 	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(TWOQGATETIMES).o $(QUBITLAYER).o 				"
-	@$(CXX) $(CXXFLAGS) $(OMPLINKERFLAG) -o $(TWOQGATETIMES) $(TWOQGATETIMES).o $(QUBITLAYER).o
+	@$(CXX) $(CXXFLAGS) $(OPENMP_LINKER_FLAG) -o $(TWOQGATETIMES) $(TWOQGATETIMES).o $(QUBITLAYER).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 	@if [ -a $(TWOQGATETIMES) ] ; \
 	then printf "%b" "$(GREEN)$(SUCCESS_STRING)$(NO_COLOR)\n"; \
@@ -143,7 +143,7 @@ $(TWOQGATETIMES): $(TWOQGATETIMES).o $(QUBITLAYER).o
 
 $(THREEQGATETIMES): $(THREEQGATETIMES).o $(QUBITLAYER).o
 	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(THREEQGATETIMES).o $(QUBITLAYER).o 			"
-	@$(CXX) $(CXXFLAGS) $(OMPLINKERFLAG) -o $(THREEQGATETIMES) $(THREEQGATETIMES).o $(QUBITLAYER).o
+	@$(CXX) $(CXXFLAGS) $(OPENMP_LINKER_FLAG) -o $(THREEQGATETIMES) $(THREEQGATETIMES).o $(QUBITLAYER).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 	@if [ -a $(THREEQGATETIMES) ] ; \
 	then printf "%b" "$(GREEN)$(SUCCESS_STRING)$(NO_COLOR)\n"; \
@@ -169,7 +169,7 @@ eprBenchmark: $(EPR)
 
 $(EPR): $(EPR).o $(QUBITLAYER).o
 	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(EPR).o $(QUBITLAYER).o					"
-	@$(CXX) $(CXXFLAGS) $(OMPLINKERFLAG) -o $(EPR) $(EPR).o $(QUBITLAYER).o
+	@$(CXX) $(CXXFLAGS) $(OPENMP_LINKER_FLAG) -o $(EPR) $(EPR).o $(QUBITLAYER).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 	@if [ -a $(EPR) ] ; \
 	then printf "%b" "$(GREEN)$(SUCCESS_STRING)$(NO_COLOR)\n"; \
@@ -197,10 +197,10 @@ check: $(TESTS)
 
 $(TESTS): $(TESTS).o $(QUBITLAYER).o
 	@printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(TESTS).o $(QUBITLAYER).o					"
-	@$(CXX) $(CXXFLAGS) $(OMPLINKERFLAG) -o $(TESTS) $(TESTS).o $(QUBITLAYER).o
+	@$(CXX) $(CXXFLAGS) $(OPENMP_LINKER_FLAG) -o $(TESTS) $(TESTS).o $(QUBITLAYER).o
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 	@printf "%b" "$(GREEN)$(SUCCESS_STRING) $(TESTS_STRING)$(NO_COLOR)\n";
-	@./$(TESTS) $(PROG_PARALLEL_FLAG)
+	./$(TESTS) $(PROG_PARALLEL_FLAG)
 	@$(RM) $(executables) $(objectFiles)
 
 $(TESTS).o: $(TESTS).cpp $(TARGET_DEPS) $(QLAYER_DEPS) $(TESTS_DEPS)
