@@ -23,11 +23,15 @@ CXXFLAGS = -g -Wall $(STANDARD)
 # parallel flag for program
 PROG_PARALLEL_FLAG = -p
 
+# antlr lib flag
+ANTLR_LIB_FLAG		= -l antlr4-runtime
+
 # project directories
-BENCHMARKS_DIR = benchmarks/
-SRC_DIR = src/
-TESTS_DIR = tests/
-EXAMPLES_DIR = examples/
+BENCHMARKS_DIR	= benchmarks/
+SRC_DIR			= src/
+TESTS_DIR		= tests/
+EXAMPLES_DIR	= examples/
+PARSERS_DIR		= $(SRC_DIR)parsers/
 
 # the build target executable
 TARGET = $(SRC_DIR)main
@@ -36,11 +40,16 @@ TARGET = $(SRC_DIR)main
 TESTS = $(TESTS_DIR)tests
 
 # the dependencies
-TARGET_DEPS  	= $(SRC_DIR)definitions.hpp
-QLAYER_DEPS 	= $(SRC_DIR)QubitLayer.hpp
-EXAMPLES_DEPS 	= $(EXAMPLES_DIR)qAlgorithms.hpp
-TIMERS 			= $(BENCHMARKS_DIR)timers.hpp
-TESTS_DEPS 		= $(TESTS_DIR)tests.hpp
+TARGET_DEPS  			= $(SRC_DIR)definitions.hpp
+QLAYER_DEPS 			= $(SRC_DIR)QubitLayer.hpp
+EXAMPLES_DEPS 			= $(EXAMPLES_DIR)qAlgorithms.hpp
+TIMERS 					= $(BENCHMARKS_DIR)timers.hpp
+TESTS_DEPS 				= $(TESTS_DIR)tests.hpp
+QASM_PARSER_DEP 		= $(PARSERS_DIR)qasm3Parser.h
+QASM_LEXER_DEP  		= $(PARSERS_DIR)qasm3Lexer.h
+QASM_LISTENER_DEP		= $(PARSERS_DIR)qasm3Listener.h
+QASM_BASE_LISTENER_DEP	= $(PARSERS_DIR)qasm3BaseListener.h
+QASM_CUST_LISTENER_DEP	= $(PARSERS_DIR)Qasm3CustomListener.hpp
 
 # the other source files
 QUBITLAYER 			= $(SRC_DIR)QubitLayer
@@ -49,9 +58,14 @@ SINGLEQGATETIMES 	= $(BENCHMARKS_DIR)singleQGateTimes
 TWOQGATETIMES 		= $(BENCHMARKS_DIR)twoQGateTimes
 THREEQGATETIMES 	= $(BENCHMARKS_DIR)threeQGateTimes
 EPR 				= $(BENCHMARKS_DIR)epr
+QASM_PARSER			= $(PARSERS_DIR)qasm3Parser
+QASM_LEXER			= $(PARSERS_DIR)qasm3Lexer
+QASM_LISTENER		= $(PARSERS_DIR)qasm3Listener
+QASM_BASE_LISTENER	= $(PARSERS_DIR)qasm3BaseListener
+QASM_CUST_LISTENER	= $(PARSERS_DIR)Qasm3CustomListener
 
 # list of object files
-objectFiles = $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o $(SINGLEQGATETIMES).o $(TWOQGATETIMES).o $(THREEQGATETIMES).o $(EPR).o $(TESTS).o
+objectFiles = $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o $(SINGLEQGATETIMES).o $(TWOQGATETIMES).o $(THREEQGATETIMES).o $(EPR).o $(TESTS).o $(QASM_PARSER).o $(QASM_LEXER).o $(QASM_LISTENER).o $(QASM_BASE_LISTENER).o $(QASM_CUST_LISTENER).o
 
 #list of executables
 executables = $(TARGET) $(SINGLEQGATETIMES) $(TWOQGATETIMES) $(THREEQGATETIMES) $(EPR) $(TESTS)
@@ -80,31 +94,56 @@ OPENMP_NOT_FOUND  = "OpenMP\ not\ found.\ Making\ QuantumSim\ without\ it"
 
 all: $(TARGET)
 
-$(TARGET): $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o
-	@if $(CXX) $(CXXFLAGS) $(OPENMP_LINKER_FLAG) -o $(TARGET) $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o; then \
-		printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o  			"; \
-		$(CXX) $(CXXFLAGS) $(OPENMP_LINKER_FLAG) -o $(TARGET) $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o; \
+$(TARGET): $(TARGET).o $(QUBITLAYER).o $(QASM_LEXER).o $(QASM_PARSER).o $(QASM_BASE_LISTENER).o $(QASM_LISTENER).o $(QASM_CUST_LISTENER).o
+	@if $(CXX) $(CXXFLAGS) $(OPENMP_LINKER_FLAG) -o $(TARGET) $(TARGET).o $(QUBITLAYER).o $(QASM_LEXER).o $(QASM_PARSER).o $(QASM_BASE_LISTENER).o $(QASM_LISTENER).o $(QASM_CUST_LISTENER).o $(ANTLR_LIB_FLAG) ; then \
+		printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(TARGET).o $(QUBITLAYER).o $(QASM_LEXER).o $(QASM_PARSER).o $(QASM_BASE_LISTENER).o $(QASM_LISTENER).o $(QASM_CUST_LISTENER).o"; \
+		$(CXX) $(CXXFLAGS) $(OPENMP_LINKER_FLAG) -o $(TARGET) $(TARGET).o $(QUBITLAYER).o $(QASM_LEXER).o $(QASM_PARSER).o $(QASM_BASE_LISTENER).o $(QASM_LISTENER).o $(QASM_CUST_LISTENER).o $(ANTLR_LIB_FLAG) ; \
 	else \
 		printf "%b" "$(YELLOW)$(WARNING_STRING)$(NO_COLOR) $(OPENMP_NOT_FOUND)\n" ; \
-		printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o  			"; \
-		$(CXX) $(CXXFLAGS) -o $(TARGET) $(TARGET).o $(QUBITLAYER).o $(EXAMPLES).o; \
+		printf "%b" "$(CYAN)$(LINK_STRING)   $(NO_COLOR)$(TARGET).o $(QUBITLAYER).o $(QASM_LEXER).o $(QASM_PARSER).o $(QASM_BASE_LISTENER).o $(QASM_LISTENER).o $(QASM_CUST_LISTENER).o "; \
+		$(CXX) $(CXXFLAGS) -o $(TARGET) $(TARGET).o $(QUBITLAYER).o $(QASM_LEXER).o $(QASM_PARSER).o $(QASM_BASE_LISTENER).o $(QASM_LISTENER).o $(QASM_CUST_LISTENER).o $(ANTLR_LIB_FLAG); \
 	fi;
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 	@printf "%b" "$(GREEN)$(SUCCESS_STRING)$(NO_COLOR)\n";
 
 $(TARGET).o: $(TARGET).cpp $(TARGET_DEPS) $(QLAYER_DEPS)
-	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                             				"
-	@$(CXX) $(CXXFLAGS) -c $(TARGET).cpp -o $(TARGET).o
+	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                             				    	 "
+	@$(CXX) $(CXXFLAGS) -I$(PARSERS_DIR) -c $(TARGET).cpp -o $(TARGET).o
 	@printf "%b" "$(GREEN)$(OK_STRING)$(NO_COLOR)\n"
 
 $(QUBITLAYER).o: $(QUBITLAYER).cpp $(TARGET_DEPS) $(QLAYER_DEPS)
-	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                       				"
+	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                       				    	 "
 	@$(CXX) $(CXXFLAGS) -c $(QUBITLAYER).cpp -o $(QUBITLAYER).o
 	@printf "%b" "$(GREEN)$(OK_STRING)$(NO_COLOR)\n"
 
 $(EXAMPLES).o: $(EXAMPLES).cpp $(TARGET_DEPS) $(QLAYER_DEPS) $(EXAMPLES_DEPS)
 	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                      				"
 	@$(CXX) $(CXXFLAGS) -c $(EXAMPLES).cpp -o $(EXAMPLES).o
+	@printf "%b" "$(GREEN)$(OK_STRING)$(NO_COLOR)\n"
+
+$(QASM_LEXER).o: $(QASM_LEXER).cpp $(QASM_LEXER_DEP)
+	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                      				 "
+	@$(CXX) $(CXXFLAGS) -I$(PARSERS_DIR) -c $(QASM_LEXER).cpp -o $(QASM_LEXER).o
+	@printf "%b" "$(GREEN)$(OK_STRING)$(NO_COLOR)\n"
+
+$(QASM_PARSER).o: $(QASM_PARSER).cpp $(QASM_PARSER_DEP) $(QASM_LISTENER_DEP)
+	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                      				 "
+	@$(CXX) $(CXXFLAGS) -I$(PARSERS_DIR) -c $(QASM_PARSER).cpp -o $(QASM_PARSER).o
+	@printf "%b" "$(GREEN)$(OK_STRING)$(NO_COLOR)\n"
+
+$(QASM_BASE_LISTENER).o: $(QASM_BASE_LISTENER).cpp $(QASM_BASE_LISTENER_DEP) $(QASM_LISTENER_DEP)
+	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                      				 "
+	@$(CXX) $(CXXFLAGS) -I$(PARSERS_DIR) -c $(QASM_BASE_LISTENER).cpp -o $(QASM_BASE_LISTENER).o
+	@printf "%b" "$(GREEN)$(OK_STRING)$(NO_COLOR)\n"
+
+$(QASM_LISTENER).o: $(QASM_LISTENER).cpp $(QASM_LISTENER_DEP)
+	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                      				 "
+	@$(CXX) $(CXXFLAGS) -I$(PARSERS_DIR) -c $(QASM_LISTENER).cpp -o $(QASM_LISTENER).o
+	@printf "%b" "$(GREEN)$(OK_STRING)$(NO_COLOR)\n"
+
+$(QASM_CUST_LISTENER).o: $(QASM_CUST_LISTENER).cpp $(QASM_CUST_LISTENER_DEP)
+	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                      				 "
+	@$(CXX) $(CXXFLAGS) -I$(PARSERS_DIR) -I$(SRC_DIR) -c $(QASM_CUST_LISTENER).cpp -o $(QASM_CUST_LISTENER).o
 	@printf "%b" "$(GREEN)$(OK_STRING)$(NO_COLOR)\n"
 
 benchmark: 
@@ -182,12 +221,12 @@ $(EPR).o: $(BENCHMARKS)$(EPR).cpp $(TARGET_DEPS) $(QLAYER_DEPS) $(TIMERS)
 	@printf "%b" "$(GREEN)$(OK_STRING)\n"
 
 cleanObj:
-	@printf "%b" "$(MAGENTA)Removing $(NO_COLOR)object files 								"
+	@printf "%b" "$(MAGENTA)Removing $(NO_COLOR)object files 									 "
 	@$(RM) $(objectFiles)
 	@printf "%b" "$(GREEN)$(OK_STRING)$(NO_COLOR)\n"
 
 clean:
-	@printf "%b" "$(MAGENTA)Removing $(NO_COLOR)executables and object files 						"
+	@printf "%b" "$(MAGENTA)Removing $(NO_COLOR)executables and object files 							 "
 	@$(RM) $(executables) $(objectFiles)
 	@printf "%b" "$(GREEN)$(OK_STRING)$(NO_COLOR)\n"
 
