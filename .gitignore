@@ -21,3 +21,6 @@ transfer
 
 # object files
 *.o
+
+# executable
+main
