@@ -50,6 +50,7 @@ QASM_LEXER_DEP  		= $(PARSERS_DIR)qasm3Lexer.h
 QASM_LISTENER_DEP		= $(PARSERS_DIR)qasm3Listener.h
 QASM_BASE_LISTENER_DEP	= $(PARSERS_DIR)qasm3BaseListener.h
 QASM_CUST_LISTENER_DEP	= $(PARSERS_DIR)Qasm3CustomListener.hpp
+OPEN_QASM_CONSTANTS		= $(PARSERS_DIR)OpenQasmConstants.hpp
 
 # the other source files
 QUBITLAYER 			= $(SRC_DIR)QubitLayer
@@ -108,7 +109,7 @@ $(TARGET): $(TARGET).o $(QUBITLAYER).o $(QASM_LEXER).o $(QASM_PARSER).o $(QASM_B
 
 $(TARGET).o: $(TARGET).cpp $(TARGET_DEPS) $(QLAYER_DEPS)
 	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                             				    	 "
-	@$(CXX) $(CXXFLAGS) -I$(PARSERS_DIR) -c $(TARGET).cpp -o $(TARGET).o
+	@$(CXX) $(CXXFLAGS) -I$(PARSERS_DIR) -I$(SRC_DIR) -c $(TARGET).cpp -o $(TARGET).o
 	@printf "%b" "$(GREEN)$(OK_STRING)$(NO_COLOR)\n"
 
 $(QUBITLAYER).o: $(QUBITLAYER).cpp $(TARGET_DEPS) $(QLAYER_DEPS)
@@ -141,13 +142,13 @@ $(QASM_LISTENER).o: $(QASM_LISTENER).cpp $(QASM_LISTENER_DEP)
 	@$(CXX) $(CXXFLAGS) -I$(PARSERS_DIR) -c $(QASM_LISTENER).cpp -o $(QASM_LISTENER).o
 	@printf "%b" "$(GREEN)$(OK_STRING)$(NO_COLOR)\n"
 
-$(QASM_CUST_LISTENER).o: $(QASM_CUST_LISTENER).cpp $(QASM_CUST_LISTENER_DEP)
-	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                      				 "
+$(QASM_CUST_LISTENER).o: $(QASM_CUST_LISTENER).cpp $(QASM_CUST_LISTENER_DEP) $(QLAYER_DEPS) $(OPEN_QASM_CONSTANTS)
+	@printf "%b" "$(BLUE)$(COM_STRING) $(NO_COLOR)$(@)                      			 "
 	@$(CXX) $(CXXFLAGS) -I$(PARSERS_DIR) -I$(SRC_DIR) -c $(QASM_CUST_LISTENER).cpp -o $(QASM_CUST_LISTENER).o
 	@printf "%b" "$(GREEN)$(OK_STRING)$(NO_COLOR)\n"
 
 benchmark: 
-	@make singleQBenchmark 
+	@make singleQBenchmark
 	@make twoQBenchmark
 	@make threeQBenchmark
 	@printf "%b" "$(BLUE)$(BENCHMARKS_STRING)$(NO_COLOR)\n"
