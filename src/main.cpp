@@ -2,10 +2,8 @@
 #include <fstream>
 #include <complex>
 #include <antlr4-common.h>
-#include "qasm3Parser.h"
 #include "qasm3Lexer.h"
 #include "Qasm3CustomListener.hpp"
-#include "QubitLayer.hpp"
 
 int main(int argc, char *argv[])
 {
