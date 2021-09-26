@@ -11,7 +11,7 @@ public:
     void enterQuantumDeclarationStatement(qasm3Parser::QuantumDeclarationStatementContext *);
     void enterQuantumInstruction(qasm3Parser::QuantumInstructionContext *);
     void exitProgram(qasm3Parser::ProgramContext *);
-    void applyGate(std::string gate, std::vector<qasm3Parser::IndexIdentifierContext *> qubits);
+    void applyGate(qasm3Parser::QuantumGateCallContext *);
 
 private:
     QubitLayer *layer = nullptr;
