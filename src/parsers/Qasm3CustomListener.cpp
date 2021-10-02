@@ -37,42 +37,42 @@ void Qasm3CustomListener::applyGate(qasm3Parser::QuantumGateCallContext *ctx)
     int target = std::stoi(qubits[0]->expressionList()->expression(0)->expressionTerminator()->Integer()->toString());
     //gate arguments if any
     precision angle = pi;
-    if (ctx->expressionList() != nullptr)
+    if (ctx->expressionList())
     {
-        if (ctx->expressionList()->expression(0)->logicalAndExpression() != nullptr)
+        if (ctx->expressionList()->expression(0)->logicalAndExpression())
         {
             qasm3Parser::MultiplicativeExpressionContext *expr = ctx->expressionList()->expression(0)->logicalAndExpression()->bitOrExpression()->xOrExpression()->bitAndExpression()->equalityExpression()->comparisonExpression()->bitShiftExpression()->additiveExpression()->multiplicativeExpression();
             std::string scalarConstantOfAngle = "1";
             // check if there is a scalar constant
-            if (expr->multiplicativeExpression()->powerExpression()->expressionTerminator()->Integer() != nullptr)
+            if (expr->multiplicativeExpression()->powerExpression()->expressionTerminator()->Integer())
             {
                 scalarConstantOfAngle = expr->multiplicativeExpression()->powerExpression()->expressionTerminator()->Integer()->toString();
             }
-            if (expr->multiplicativeExpression()->powerExpression()->expressionTerminator()->RealNumber() != nullptr)
+            if (expr->multiplicativeExpression()->powerExpression()->expressionTerminator()->RealNumber())
             {
                 scalarConstantOfAngle = expr->multiplicativeExpression()->powerExpression()->expressionTerminator()->RealNumber()->toString();
             }
-            if (expr->MUL() != nullptr)
+            if (expr->MUL())
             {
                 // check if there is a scalar constant
-                if (expr->multiplicativeExpression()->powerExpression()->expressionTerminator()->Integer() != nullptr)
+                if (expr->multiplicativeExpression()->powerExpression()->expressionTerminator()->Integer())
                 {
                     scalarConstantOfAngle = expr->multiplicativeExpression()->powerExpression()->expressionTerminator()->Integer()->toString();
                 }
-                if (expr->multiplicativeExpression()->powerExpression()->expressionTerminator()->RealNumber() != nullptr)
+                if (expr->multiplicativeExpression()->powerExpression()->expressionTerminator()->RealNumber())
                 {
                     scalarConstantOfAngle = expr->multiplicativeExpression()->powerExpression()->expressionTerminator()->RealNumber()->toString();
                 }
                 angle = std::stod(scalarConstantOfAngle) * pi;
             }
-            if (expr->DIV() != nullptr)
+            if (expr->DIV())
             {
                 // check if there is a scalar constant
-                if (expr->powerExpression()->expressionTerminator()->Integer() != nullptr)
+                if (expr->powerExpression()->expressionTerminator()->Integer())
                 {
                     scalarConstantOfAngle = expr->powerExpression()->expressionTerminator()->Integer()->toString();
                 }
-                if (expr->powerExpression()->expressionTerminator()->RealNumber() != nullptr)
+                if (expr->powerExpression()->expressionTerminator()->RealNumber())
                 {
                     scalarConstantOfAngle = expr->powerExpression()->expressionTerminator()->RealNumber()->toString();
                 }
