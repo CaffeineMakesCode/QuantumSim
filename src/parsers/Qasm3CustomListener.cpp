@@ -45,16 +45,38 @@ void Qasm3CustomListener::applyGate(qasm3Parser::QuantumGateCallContext *ctx)
             std::string scalarConstantOfAngle = "1";
             // check if there is a scalar constant
             if (expr->multiplicativeExpression()->powerExpression()->expressionTerminator()->Integer() != nullptr)
+            {
                 scalarConstantOfAngle = expr->multiplicativeExpression()->powerExpression()->expressionTerminator()->Integer()->toString();
+            }
             if (expr->multiplicativeExpression()->powerExpression()->expressionTerminator()->RealNumber() != nullptr)
+            {
                 scalarConstantOfAngle = expr->multiplicativeExpression()->powerExpression()->expressionTerminator()->RealNumber()->toString();
+            }
             if (expr->MUL() != nullptr)
             {
+                // check if there is a scalar constant
+                if (expr->multiplicativeExpression()->powerExpression()->expressionTerminator()->Integer() != nullptr)
+                {
+                    scalarConstantOfAngle = expr->multiplicativeExpression()->powerExpression()->expressionTerminator()->Integer()->toString();
+                }
+                if (expr->multiplicativeExpression()->powerExpression()->expressionTerminator()->RealNumber() != nullptr)
+                {
+                    scalarConstantOfAngle = expr->multiplicativeExpression()->powerExpression()->expressionTerminator()->RealNumber()->toString();
+                }
                 angle = std::stod(scalarConstantOfAngle) * pi;
             }
             if (expr->DIV() != nullptr)
             {
-                angle = std::stod(scalarConstantOfAngle) / pi;
+                // check if there is a scalar constant
+                if (expr->powerExpression()->expressionTerminator()->Integer() != nullptr)
+                {
+                    scalarConstantOfAngle = expr->powerExpression()->expressionTerminator()->Integer()->toString();
+                }
+                if (expr->powerExpression()->expressionTerminator()->RealNumber() != nullptr)
+                {
+                    scalarConstantOfAngle = expr->powerExpression()->expressionTerminator()->RealNumber()->toString();
+                }
+                angle = pi / std::stod(scalarConstantOfAngle);
             }
         }
     }
