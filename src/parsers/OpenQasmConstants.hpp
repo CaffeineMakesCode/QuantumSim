@@ -11,6 +11,6 @@ constexpr std::string_view OPENQASM_RY_GATE{"ry"};
 constexpr std::string_view OPENQASM_RZ_GATE{"rz"};
 constexpr std::string_view OPENQASM_CNOT_GATE{"cx"};
 constexpr std::string_view OPENQASM_TOFFOLI_GATE{"ccx"};
-constexpr std::string_view OPENQASM_CPHASE_GATE{"cphase"};
+constexpr std::string_view OPENQASM_CZ_GATE{"cz"};
 
 #endif

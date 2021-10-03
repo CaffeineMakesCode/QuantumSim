@@ -115,7 +115,7 @@ void Qasm3CustomListener::applyGate(qasm3Parser::QuantumGateCallContext *ctx)
         target = std::stoi(qubits[1]->expressionList()->expression(0)->expressionTerminator()->Integer()->toString());
         layer->cnot(control, target);
     }
-    if (gate == OPENQASM_CPHASE_GATE)
+    if (gate == OPENQASM_CZ_GATE)
     {
         int control = target;
         target = std::stoi(qubits[1]->expressionList()->expression(0)->expressionTerminator()->Integer()->toString());
