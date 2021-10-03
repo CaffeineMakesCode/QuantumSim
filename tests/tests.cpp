@@ -64,7 +64,7 @@ bool testGate(Gates gate)
         break;
     case cphase:
         q.cz(0, 1);
-        testerGate = cphaseTester;
+        testerGate = czTester;
         break;
     case toffoli:
         q.toffoli(0, 1, 2);
