@@ -38,77 +38,49 @@ void Qasm3CustomListener::applyGate(qasm3Parser::QuantumGateCallContext *ctx)
     //gate arguments if any
     precision angle = pi;
     if (ctx->expressionList())
-    {
         if (ctx->expressionList()->expression(0)->logicalAndExpression())
         {
             qasm3Parser::MultiplicativeExpressionContext *expr = ctx->expressionList()->expression(0)->logicalAndExpression()->bitOrExpression()->xOrExpression()->bitAndExpression()->equalityExpression()->comparisonExpression()->bitShiftExpression()->additiveExpression()->multiplicativeExpression();
             std::string scalarConstantOfAngle = "1";
             // check if there is a scalar constant
             if (expr->multiplicativeExpression()->powerExpression()->expressionTerminator()->Integer())
-            {
                 scalarConstantOfAngle = expr->multiplicativeExpression()->powerExpression()->expressionTerminator()->Integer()->toString();
-            }
             if (expr->multiplicativeExpression()->powerExpression()->expressionTerminator()->RealNumber())
-            {
                 scalarConstantOfAngle = expr->multiplicativeExpression()->powerExpression()->expressionTerminator()->RealNumber()->toString();
-            }
             if (expr->MUL())
             {
                 // check if there is a scalar constant
                 if (expr->multiplicativeExpression()->powerExpression()->expressionTerminator()->Integer())
-                {
                     scalarConstantOfAngle = expr->multiplicativeExpression()->powerExpression()->expressionTerminator()->Integer()->toString();
-                }
                 if (expr->multiplicativeExpression()->powerExpression()->expressionTerminator()->RealNumber())
-                {
                     scalarConstantOfAngle = expr->multiplicativeExpression()->powerExpression()->expressionTerminator()->RealNumber()->toString();
-                }
                 angle = std::stod(scalarConstantOfAngle) * pi;
             }
             if (expr->DIV())
             {
                 // check if there is a scalar constant
                 if (expr->powerExpression()->expressionTerminator()->Integer())
-                {
                     scalarConstantOfAngle = expr->powerExpression()->expressionTerminator()->Integer()->toString();
-                }
                 if (expr->powerExpression()->expressionTerminator()->RealNumber())
-                {
                     scalarConstantOfAngle = expr->powerExpression()->expressionTerminator()->RealNumber()->toString();
-                }
                 angle = pi / std::stod(scalarConstantOfAngle);
             }
         }
-    }
     //check for available gates defined in QubitLayer
     if (gate == OPENQASM_X_GATE)
-    {
         layer->pauliX(target);
-    }
     if (gate == OPENQASM_Y_GATE)
-    {
         layer->pauliY(target);
-    }
     if (gate == OPENQASM_Z_GATE)
-    {
         layer->pauliZ(target);
-    }
     if (gate == OPENQASM_RX_GATE)
-    {
         layer->rx(target, angle);
-    }
     if (gate == OPENQASM_RY_GATE)
-    {
         layer->ry(target, angle);
-    }
     if (gate == OPENQASM_RZ_GATE)
-    {
         layer->rz(target, angle);
-    }
     if (gate == OPENQASM_HADAMARD_GATE)
-    {
         layer->hadamard(target);
-    }
     if (gate == OPENQASM_CNOT_GATE)
     {
         int control = target;
