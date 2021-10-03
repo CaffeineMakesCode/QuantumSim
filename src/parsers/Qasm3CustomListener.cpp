@@ -119,6 +119,6 @@ void Qasm3CustomListener::applyGate(qasm3Parser::QuantumGateCallContext *ctx)
     {
         int control = target;
         target = std::stoi(qubits[1]->expressionList()->expression(0)->expressionTerminator()->Integer()->toString());
-        layer->cphase(control, target);
+        layer->cz(control, target);
     }
 }

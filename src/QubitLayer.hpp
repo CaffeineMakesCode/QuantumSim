@@ -24,7 +24,7 @@ public:
     void cnot(int control, int target);
     void toffoli(int control1, int control2, int target);
     void mcnot(int *controls, int numControls, int target);
-    void cphase(int control, int target);
+    void cz(int control, int target);
     void mcphase(int *controls, int numControls, int target);
     qProb getMaxAmplitude();
     void printMeasurement();
