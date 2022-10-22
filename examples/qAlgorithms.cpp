@@ -18,29 +18,29 @@ QubitLayer grover(unsigned int numQubits, int unsigned dSolution, int unsigned n
     int ctrlQubits[numQubits - 1];
     for (int i = 0; i < (numQubits - 1); i++)
         ctrlQubits[i] = i;
-    //initiliase qubits to a superposition of all states
+    // initiliase qubits to a superposition of all states
     for (int i = 0; i < numQubits; i++)
-        q.hadamard(i);
+        q.applyHadamard(i);
     for (int rep = 0; rep < numReps; rep++)
     {
-        //oracle to tag solution
+        // oracle to tag solution
         for (int i = 0; i < numQubits; i++)
             if (!bSolution.test(i))
-                q.pauliX(i);
-        q.mcphase(ctrlQubits, numQubits - 1, numQubits - 1);
+                q.applyPauliX(i);
+        q.applyMcphase(ctrlQubits, numQubits - 1, numQubits - 1);
         for (int i = 0; i < numQubits; i++)
             if (!bSolution.test(i))
-                q.pauliX(i);
-        //grover diffusion operator (inversion about mean and amplitude amplification)
+                q.applyPauliX(i);
+        // grover diffusion operator (inversion about mean and amplitude amplification)
         for (int i = 0; i < numQubits; i++)
-            q.hadamard(i);
+            q.applyHadamard(i);
         for (int i = 0; i < numQubits; i++)
-            q.pauliX(i);
-        q.mcphase(ctrlQubits, numQubits - 1, numQubits - 1);
+            q.applyPauliX(i);
+        q.applyMcphase(ctrlQubits, numQubits - 1, numQubits - 1);
         for (int i = 0; i < numQubits; i++)
-            q.pauliX(i);
+            q.applyPauliX(i);
         for (int i = 0; i < numQubits; i++)
-            q.hadamard(i);
+            q.applyHadamard(i);
     }
     return q;
 }
@@ -54,22 +54,22 @@ QubitLayer grover(unsigned int numQubits, int unsigned dSolution, int unsigned n
         exit(EXIT_FAILURE);
     }
     //initialise state to anything you want
-    q.rx(0, pi/3);
+    q.applyRx(0, pi/3);
     std::cout<<"Initial state:"<<std::endl;
     q.printQubits();
     //"copy" state
-    q.cnot(0, 1);
-    q.cnot(0, 2);
+    q.applyCnot(0, 1);
+    q.applyCnot(0, 2);
     //inject error
     switch(errorType){
-        case errorX: q.pauliX(errorLocation); break;
-        case errorY: q.pauliY(errorLocation); break;
-        case errorZ: q.pauliZ(errorLocation); break;
+        case errorX: q.applyPauliX(errorLocation); break;
+        case errorY: q.applyPauliY(errorLocation); break;
+        case errorZ: q.applyPauliZ(errorLocation); break;
     }
     //undo the "copy"
-    q.cnot(0, 1);
-    q.cnot(0, 2);
-    q.toffoli(2, 1, 0);
+    q.applyCnot(0, 1);
+    q.applyCnot(0, 2);
+    q.applyToffoli(2, 1, 0);
     std::cout<<"Final state:"<<std::endl;
     return q;
 }
@@ -83,8 +83,8 @@ QubitLayer genEPR(unsigned int numQubits, unsigned int q1, unsigned int q2){
     }
     QubitLayer q(numQubits);
     //apply hadamard to the first qubit
-    q.hadamard(q2);
+    q.applyHadamard(q2);
     //apply cnot on the 2 qubits
-    q.cnot(q2, q1);
+    q.applyCnot(q2, q1);
     return q;
 }*/

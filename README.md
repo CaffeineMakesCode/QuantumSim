@@ -76,6 +76,12 @@ int main(){
 }
 ```
 ___
+## Testing
+The Makefile can run tests:
+```zsh
+make check
+```
+___
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
 

@@ -31,55 +31,55 @@ bool testGate(Gates gate)
     switch (gate)
     {
     case X:
-        q.pauliX(0);
+        q.applyPauliX(0);
         testerGate = pauliXtester;
         break;
     case Y:
-        q.pauliY(0);
+        q.applyPauliY(0);
         testerGate = pauliYtester;
         break;
     case Z:
-        q.pauliZ(0);
+        q.applyPauliZ(0);
         testerGate = pauliZtester;
         break;
     case Hadamard:
-        q.hadamard(0);
+        q.applyHadamard(0);
         testerGate = hadamardTester;
         break;
     case rx:
-        q.rx(0, pi);
+        q.applyRx(0, pi);
         testerGate = rxTester;
         break;
     case ry:
-        q.ry(0, pi);
+        q.applyRy(0, pi);
         testerGate = ryTester;
         break;
     case rz:
-        q.rz(0, pi);
+        q.applyRz(0, pi);
         testerGate = rzTester;
         break;
     case cnot:
-        q.cnot(0, 1);
+        q.applyCnot(0, 1);
         testerGate = cnotTester;
         break;
     case cphase:
-        q.cphase(0, 1);
+        q.applyCphase(0, 1);
         testerGate = cphaseTester;
         break;
     case toffoli:
-        q.toffoli(0, 1, 2);
+        q.applyToffoli(0, 1, 2);
         testerGate = toffoliTester;
         break;
     case mcnot:
-        q.mcnot(ctrlQubits, 2, 2);
+        q.applyMcnot(ctrlQubits, 2, 2);
         testerGate = mcnotTester;
         break;
     case mcphase:
-        q.mcphase(ctrlQubits, 2, 2);
+        q.applyMcphase(ctrlQubits, 2, 2);
         testerGate = mcphaseTester;
         break;
     default:
-        q.pauliX(0);
+        q.applyPauliX(0);
         break;
     }
     // define variable to store the result of the test
