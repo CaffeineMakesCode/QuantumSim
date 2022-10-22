@@ -285,7 +285,7 @@ void QubitLayer::applyMcnot(int *controls, int numControls, int target)
     updateLayer();
 }
 
-void QubitLayer::applyCphase(int control, int target)
+void QubitLayer::applyCz(int control, int target)
 {
 #pragma omp parallel for shared(qOdd_, qEven_)
     for (unsigned long long int i = 0; i < numStates; i++)

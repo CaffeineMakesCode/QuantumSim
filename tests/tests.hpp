@@ -55,8 +55,8 @@ TesterGate cnotTester = {
     .outputState = {zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, {1, 0}, zeroComplex, zeroComplex},
 };
 
-TesterGate cphaseTester = {
-    .gateName = "CPHASE  ",
+TesterGate czTester = {
+    .gateName = "CZ      ",
     .outputState = {zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, zeroComplex, {-1, 0}},
 };
 

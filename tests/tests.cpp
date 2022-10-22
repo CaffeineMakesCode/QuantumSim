@@ -63,8 +63,8 @@ bool testGate(Gates gate)
         testerGate = cnotTester;
         break;
     case cphase:
-        q.applyCphase(0, 1);
-        testerGate = cphaseTester;
+        q.applyCz(0, 1);
+        testerGate = czTester;
         break;
     case toffoli:
         q.applyToffoli(0, 1, 2);
