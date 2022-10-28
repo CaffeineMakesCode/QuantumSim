@@ -24,3 +24,6 @@ transfer
 
 # executable
 main
+
+# python virtual environment
+.venv

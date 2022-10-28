@@ -5,7 +5,7 @@
 
 QuantumSim is a simulator for quantum computing.
 
-## Cloning and running tests
+## Setup and running tests
 
 Clone the repository
 
@@ -13,7 +13,9 @@ Clone the repository
 git clone https://github.com/CaffeineMakesCode/QuantumSim
 ```
 
-Run the checks from the root folder
+To setup ANTLR follow [this](https://github.com/antlr/antlr4/blob/master/doc/getting-started.md) guide.
+
+Run the tests from the root folder
 
 ```zsh
 cd <path-to-repository>/QuantumSim && make check
@@ -80,12 +82,6 @@ int main(){
     // print qubits
     q.printQubits();
 }
-```
-___
-## Testing
-The Makefile can run tests:
-```zsh
-make check
 ```
 ___
 ## Contributing
