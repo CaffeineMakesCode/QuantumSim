@@ -18,43 +18,25 @@ Run the checks from the root folder
 ```zsh
 cd <path-to-repository>/QuantumSim && make check
 ```
-
----
-
-## Building
-
-The simulator can be built using Make. Run `make` in the root directory, the run the executable with the path to the `qasm` file.
-
-```zsh
-make
-./src/main ~/Desktop/sample.qasm
-```
-
----
-
-## Supported gates
-
-The OpenQASM gates supported are the ones defined in `src/parsers/OpenQasmConstants.hpp`. If your preference is to write the circuit in C++ and build the simulator every time, then the supported gates are the ones defined in the `QubitLayer` class.
-
----
-
-## Example with C++
-
-The `QubitLayer` class in `src/QubitLayer.cpp` defines the functions for the quantum gates and the arrays that store the amplitudes for the qubits. The table below lists the functions that can be used by a `QubitLayer` object. `precision` is a `typedef` for `double`.
-| Quantum Gate | Function |
-| ---------------------------|------------------------------------------------------|
-| Pauli X | `pauliX(int target)` |
-| Pauli Y | `pauliY(int target)` |
-| Pauli Z | `pauliZ(int target)` |
-| Hadamard | `hadamard(int target)` |
-| Rotation X | `rx(int target, precision theta)` |
-| Rotation Y | `ry(int target, precision theta)` |
-| Rotation Z | `rz(int target, precision theta)` |
-| Controlled NOT | `cnot(int control, int target)` |
-| Toffoli | `toffoli(int control1, int control2, int target)` |
-| Multiple controlled CNOT | `mcnot(int *controls, int numControls, int target)` |
-| Controlled Phase | `cphase(int control, int target)` |
-| Multiple controlled Phase | `mcphase(int *controls, int numControls, int target)`|
+___
+## Usage
+The `QubitLayer` class in `src/QubitLayer.cpp` defines the functions for the quantum gates and the arrays that store the amplitudes for the qubits. The table below lists the functions that can be used by a `QubitLayer` object. `precision` is a `typedef` for `double`. The supported gates are:
+| Quantum Gate                  | Function                                                     |
+| ------------------------------|--------------------------------------------------------------|
+| Pauli X                       | `applyPauliX(int target)`                                    |
+| Pauli Y                       | `applyPauliY(int target)`                                    |
+| Pauli Z                       | `applyPauliZ(int target)`                                    |
+| Hadamard                      | `applyHadamard(int target)`                                  |
+| Rotation X                    | `applyRx(int target, precision theta)`                       |
+| Rotation Y                    | `applyRy(int target, precision theta)`                       |
+| Rotation Z                    | `applyRz(int target, precision theta)`                       |
+| Controlled NOT                | `applyCnot(int control, int target)`                         |
+| Toffoli                       | `applyToffoli(int control1, int control2, int target)`       |
+| Multiple controlled CNOT      | `applyMcnot(int *controls, int numControls, int target)`     |
+| Controlled Z                  | `applyCz(int control, int target)`                           |
+| Multiple controlled Z         | `applyMcz(int *controls, int numControls, int target)`       | 
+___
+## Example
 
 Running a quantum circuit is done by writing the circuit in `src/main.cpp`.
 
@@ -99,9 +81,13 @@ int main(){
     q.printQubits();
 }
 ```
-
----
-
+___
+## Testing
+The Makefile can run tests:
+```zsh
+make check
+```
+___
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
