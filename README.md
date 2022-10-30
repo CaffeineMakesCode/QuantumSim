@@ -15,6 +15,8 @@ git clone https://github.com/CaffeineMakesCode/QuantumSim
 
 To setup ANTLR follow [this](https://github.com/antlr/antlr4/blob/master/doc/getting-started.md) guide.
 
+The ANTLR4 runtime comes with a library that is used for linking. Make sure this library `libantlr4-runtime.dylib` is located where the compiler can find it. Usuall `/usr/local/lib` for MacOS systems will work. The header files should go in `/usr/local/include`.
+
 Run the tests from the root folder
 
 ```zsh

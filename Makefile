@@ -24,7 +24,7 @@ CXXFLAGS = -g -Wall $(STANDARD)
 PROG_PARALLEL_FLAG = -p
 
 # antlr lib flag
-ANTLR_LIB_FLAG		= -l antlr4-runtime
+ANTLR_LIB_FLAG		= -lantlr4-runtime
 
 # project directories
 BENCHMARKS_DIR	= benchmarks/
