@@ -5,13 +5,14 @@
 
 QuantumSim is a simulator for quantum computing.
 
-## Cloning and checking
+## Setting up
 
 Clone the repository
 ```zsh 
 git clone https://github.com/CaffeineMakesCode/QuantumSim
 ```
-Run the checks from the root folder
+
+Run the tests from the root folder
 ```zsh 
 cd <path-to-repository>/QuantumSim && make check
 ```
@@ -74,12 +75,6 @@ int main(){
     // print qubits
     q.printQubits();
 }
-```
-___
-## Testing
-The Makefile can run tests:
-```zsh
-make check
 ```
 ___
 ## Contributing
